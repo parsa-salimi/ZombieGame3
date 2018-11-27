@@ -1,7 +1,14 @@
 class : Enemy
+	variables:
+			int x;
+			int y;
     methods: int getX();
              int getY();
-             int getClass();
+             int getClass(); //advanced
+             void updatePosition();
+             constructor(x,y): initialize position(x,y);
+             				   set speed;
+           
 
 
 Arraylist of enemies(birds); 

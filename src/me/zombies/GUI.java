@@ -1,3 +1,4 @@
+
 package me.zombies;
 
 
@@ -32,7 +33,7 @@ public class GUI extends JFrame {
 	
 	class DrawPanel extends JPanel {
 					
-		int panSize=400;
+		int panSize=600;
 		
 		DrawPanel() {	
 			this.setBackground(Color.WHITE);			

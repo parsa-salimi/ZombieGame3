@@ -1,7 +1,14 @@
 class : Enemy
+	variables:
+			int x;
+			int y;
     methods: int getX();
              int getY();
-             int getClass();
+             int getClass(); //advanced
+             void updatePosition();
+             constructor(x,y): initialize position(x,y);
+             				   set speed;
+           
 
 
 Arraylist of enemies(birds); 
@@ -31,14 +38,15 @@ Game :
        start() :
                spawn birds
                initialize player location
-               initiazlize terrain
+               initialize terrain
                start main game loop:
                     birds get closer to player(advacned: respond to collision), if they hit player health decreases, player moves around and 
                     shoots bullets(mouse and keyboard events...) create and destroy bullets in arraylist. update player position
-                    update zombie position.
+                    update bird position.
                     (this is not even pseudocode yet but we will figure things out, (i hope))
           
           ------------------------------------------------------------
 Random thoughts. (In the spirit of our class):
           https://www.goodreads.com/book/show/222146.Masters_of_Doom
           the repos are all public so we can technically steal other people's code, but we will NEVER do that.
+https://en.wikipedia.org/wiki/The_Glow_Pt._2

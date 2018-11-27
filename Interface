@@ -31,11 +31,11 @@ Game :
        start() :
                spawn birds
                initialize player location
-               initiazlize terrain
+               initialize terrain
                start main game loop:
                     birds get closer to player(advacned: respond to collision), if they hit player health decreases, player moves around and 
                     shoots bullets(mouse and keyboard events...) create and destroy bullets in arraylist. update player position
-                    update zombie position.
+                    update bird position.
                     (this is not even pseudocode yet but we will figure things out, (i hope))
           
           ------------------------------------------------------------

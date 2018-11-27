@@ -22,7 +22,21 @@ Arraylist of obstacles : this could be either randomly generated or prebuilt(sor
 Advanced: Different types of enemies
           Different weapons
           User interface
-          
+        
+Game :
+       method: start();
+       //we basically have a button when the program runs, when the user clicks this button, you, the graphics programmer,
+       should run this method. We will implement the actual thing.
+       
+       start() :
+               spawn birds
+               initialize player location
+               initiazlize terrain
+               start main game loop:
+                    birds get closer to player(advacned: respond to collision), if they hit player health decreases, player moves around and 
+                    shoots bullets(mouse and keyboard events...) create and destroy bullets in arraylist. update player position
+                    update zombie position.
+                    (this is not even pseudocode yet but we will figure things out, (i hope))
           
           ------------------------------------------------------------
 Random thoughts. (In the spirit of our class):

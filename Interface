@@ -1,0 +1,30 @@
+class : Enemy
+    methods: int getX();
+             int getY();
+             int getClass();
+
+
+Arraylist of enemies(birds); 
+Arraylist of bullets(velocity, position)
+class : Bullet
+    methods: int getVelocityX();
+             int getVelocityY();
+             int getX();
+             int getY();
+Class : Player
+    methods: int GetHealth();
+             int getX();
+             int getY();
+  
+Arraylist of obstacles : this could be either randomly generated or prebuilt(sorta like a dungeon)
+
+
+Advanced: Different types of enemies
+          Different weapons
+          User interface
+          
+          
+          ------------------------------------------------------------
+Random thoughts. (In the spirit of our class):
+          https://www.goodreads.com/book/show/222146.Masters_of_Doom
+          the repos are all public so we can technically steal other people's code, but we will NEVER do that.

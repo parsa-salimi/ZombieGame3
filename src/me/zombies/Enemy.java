@@ -5,7 +5,7 @@ public class Enemy {
 	int y;
 	int vx;
 	int vy;
-
+//hehe brennan was here 
 //method
 	int getX(){
 		return x;

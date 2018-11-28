@@ -1,6 +1,8 @@
+
 package me.zombies;
 
 public class Enemy {
+	static final int v = 10;
 	int x;
 	int y;
 	int vx;
@@ -21,4 +23,19 @@ public class Enemy {
 		y = y+vy;
 	}
 	
+	Enemy(int x, int y) {
+		this.x = x;
+		this.y = y;
+		this.vx = v;
+		this.vy = v;
+	}
+	
+	Enemy(int x, int y,int vx, int vy){
+		this.x = x;
+		this.y = y;
+		this.vx = vx;
+		this.vy = vy;
+		
+	}
 }
+

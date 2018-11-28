@@ -2,6 +2,8 @@ class : Enemy
 	variables:
 			int x;
 			int y;
+			int speedX;
+			int speedY;
     methods: int getX();
              int getY();
              int getClass(); //advanced

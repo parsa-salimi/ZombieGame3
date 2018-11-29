@@ -3,19 +3,19 @@ package me.zombies;
 
 public class Enemy {
 	static final int v = 10;
-	int x;
-	int y;
+	double x;
+	double y;
 	int vx;
 	int vy;
 //hehe brennan was here 
 //method
 	//test
-	int getX(){
+	double getX(){
 		return x;
 	}
 	
 	
-	int getY(){
+	double getY(){
 		return y;
 	}
 	
@@ -24,9 +24,9 @@ public class Enemy {
 		y = y+vy;
 	}
 	
-	void moveToPosition(int toX, int toY) {
-		int dispX =  toX - x;
-		int dispY = toY - y;
+	void moveToPosition(double toX, double toY) {
+		double dispX =  toX - x;
+		double dispY = toY - y;
 		double angle = Math.atan(dispY - dispX);
 		x += v * Math.cos(angle);
 		y += v * Math.sin(angle);

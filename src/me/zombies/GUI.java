@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 
 
 public class GUI extends JFrame {
+	DrawPanel pan;
 	int playerX = 100;
 	int playerY = 100;
 	static final int playerV = 10;
@@ -40,7 +41,7 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 5; i++) {
 			birds.add(new Enemy(i*50, i*40));
 		}
-		DrawPanel pan = new DrawPanel();
+		pan = new DrawPanel();
 		
 		this.setTitle("Main graphics ..."); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,13 +77,7 @@ public class GUI extends JFrame {
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			
-			int r = 20; //circle radius
-			
-			g.setColor(Color.GREEN.darker());
-			g.drawLine(0, panSize/2, panSize/2, panSize/2);
-			g.drawLine(panSize/2, panSize/2, panSize/2, panSize);
-			g.setColor(Color.BLUE);
-			g.drawOval(panSize/2-r/2, panSize/2-r/2, r, r);			
+			g2.drawRect(playerX, playerY, 10, 10);	
 		}
 			
 		
@@ -109,7 +104,7 @@ public class GUI extends JFrame {
         	else if (direction == 4) {
         		playerX += playerV;
         	}
-          
+          pan.repaint();
         }
     }
 }

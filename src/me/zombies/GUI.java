@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 
 public class GUI extends JFrame {
 	DrawPanel pan;
+	ArrayList<Enemy> birds;
 	int playerX = 100;
 	int playerY = 100;
 	static final int playerV = 10;
@@ -36,7 +37,7 @@ public class GUI extends JFrame {
 				new GUI();
 			}
 	GUI(){
-		ArrayList<Enemy> birds = new ArrayList<Enemy>();
+		birds = new ArrayList<Enemy>();
 		//create 5 enemies
 		for(int i = 0; i < 5; i++) {
 			birds.add(new Enemy(i*50, i*40));
@@ -74,10 +75,16 @@ public class GUI extends JFrame {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g); //clear screen and repaint using background colour
 			panSize = this.getWidth();
+			
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			
-			g2.drawRect(playerX, playerY, 10, 10);	
+			for( Enemy i : birds) {
+				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
+				//i.moveToPosition(playerX,playerY);
+				
+			}
+			g2.drawRect(playerX, playerY, 10, 10);
+			pan.repaint();
 		}
 			
 		

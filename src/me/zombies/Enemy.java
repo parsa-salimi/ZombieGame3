@@ -24,6 +24,14 @@ public class Enemy {
 		y = y+vy;
 	}
 	
+	void moveToPosition(int toX, int toY) {
+		int dispX =  toX - x;
+		int dispY = toY - y;
+		double angle = Math.atan(dispY - dispX);
+		x += v * Math.cos(angle);
+		y += v * Math.sin(angle);
+	}
+	
 	Enemy(int x, int y) {
 		this.x = x;
 		this.y = y;

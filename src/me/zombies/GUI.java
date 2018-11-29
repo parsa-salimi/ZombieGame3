@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -34,6 +35,11 @@ public class GUI extends JFrame {
 				new GUI();
 			}
 	GUI(){
+		ArrayList<Enemy> birds = new ArrayList<Enemy>();
+		//create 5 enemies
+		for(int i = 0; i < 5; i++) {
+			birds.add(new Enemy(i*50, i*40));
+		}
 		DrawPanel pan = new DrawPanel();
 		
 		this.setTitle("Main graphics ..."); 

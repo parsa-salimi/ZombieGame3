@@ -18,8 +18,8 @@ import javax.swing.SwingUtilities;
 
 
 public class GUI extends JFrame {
-	int playerX;
-	int playerY;
+	int playerX = 100;
+	int playerY = 100;
 	static final int playerV = 10;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -91,11 +91,18 @@ public class GUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-        	//decrease and decrease playerX and playerY
-        	//if 1 go up by v
-        	//if 2 go down by v
-        	//if 3 go left by v
-        	//if 4 go right by v
+        	if (direction ==1) {
+        		playerY -= playerV;
+        	}
+        	else if (direction ==2) {
+        		playerY += playerV;
+        	}
+        	else if (direction == 3) {
+        		playerX -= playerV;
+        	}
+        	else if (direction == 4) {
+        		playerX += playerV;
+        	}
           
         }
     }

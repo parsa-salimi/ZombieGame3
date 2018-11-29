@@ -9,6 +9,7 @@ public class Enemy {
 	int vy;
 //hehe brennan was here 
 //method
+	//test
 	int getX(){
 		return x;
 	}

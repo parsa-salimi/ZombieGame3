@@ -26,7 +26,7 @@ public class GUI extends JFrame {
 	ArrayList<Enemy> birds;
 	int playerX = 100;
 	int playerY = 100;
-	static final int playerV = 60;
+	static final int playerV = 10;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	private static final String MOVE_UP = "move up";

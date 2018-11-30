@@ -26,10 +26,21 @@ public class Enemy {
 	
 	void moveToPosition(double toX, double toY) {
 		double dispX =  toX - x;
-		double dispY = toY - y;
-		double angle = Math.atan(dispY - dispX);
-		x += v * Math.cos(angle);
-		y += v * Math.sin(angle);
+		double dispY = (toY - y);
+		double angle = Math.atan(Math.abs(dispY) /Math.abs(dispX));
+		if(dispY < 0) {
+			y -= v * Math.sin(angle);
+		}
+		else if (dispY >= 0) {
+			y += v* Math.sin(angle);
+		}
+		if(dispX >= 0) {
+			x += v * Math.cos(angle);
+		}
+		else if (dispX < 0) {
+			x -= v * Math.cos(angle);
+		}
+		
 	}
 	
 	Enemy(int x, int y) {

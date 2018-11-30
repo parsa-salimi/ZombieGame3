@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -16,6 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+
 
 
 public class GUI extends JFrame {
@@ -23,13 +26,14 @@ public class GUI extends JFrame {
 	ArrayList<Enemy> birds;
 	int playerX = 100;
 	int playerY = 100;
-	static final int playerV = 10;
+	static final int playerV = 60;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	private static final String MOVE_UP = "move up";
     private static final String MOVE_DOWN = "move down";
     private static final String MOVE_LEFT = "move left";
     private static final String MOVE_RIGHT = "move right";
+    static final int T1_SPEED = 100;
 	
 
 	public static void main(String[] args) {
@@ -44,6 +48,8 @@ public class GUI extends JFrame {
 		}
 		pan = new DrawPanel();
 		
+		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
+		firstTimer.start();
 		this.setTitle("Main graphics ..."); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.add(pan);	
@@ -60,6 +66,17 @@ public class GUI extends JFrame {
 		pan.getActionMap().put(MOVE_DOWN, new MoveAction(2));
 		pan.getActionMap().put(MOVE_LEFT, new MoveAction(3));
 		pan.getActionMap().put(MOVE_RIGHT, new MoveAction(4));
+		
+
+	}
+	
+	private class Timer1Listener  implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			for (Enemy i : birds) {
+				i.moveToPosition(playerX, playerY);
+			}
+		}
 	}
 	
 	class DrawPanel extends JPanel {
@@ -80,7 +97,6 @@ public class GUI extends JFrame {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			for( Enemy i : birds) {
 				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
-				//i.moveToPosition(playerX,playerY);
 				
 			}
 			g2.drawRect(playerX, playerY, 10, 10);

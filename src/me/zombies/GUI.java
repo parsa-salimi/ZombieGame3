@@ -24,6 +24,7 @@ import javax.swing.Timer;
 public class GUI extends JFrame {
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
+	ArrayList<Bullet> bullets;
 	int playerX = 100;
 	int playerY = 100;
 	static final int playerV = 10;
@@ -33,6 +34,7 @@ public class GUI extends JFrame {
     private static final String MOVE_DOWN = "move down";
     private static final String MOVE_LEFT = "move left";
     private static final String MOVE_RIGHT = "move right";
+    private static final String SHOOT_BULLET = "shoot";
     static final int T1_SPEED = 100;
 	
 
@@ -42,6 +44,7 @@ public class GUI extends JFrame {
 			}
 	GUI(){
 		birds = new ArrayList<Enemy>();
+		bullets = new ArrayList<Bullet>();
 		//create 5 enemies
 		for(int i = 0; i < 5; i++) {
 			birds.add(new Enemy(i*50, i*40));
@@ -61,11 +64,13 @@ public class GUI extends JFrame {
 		pan.getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), MOVE_DOWN);
 		pan.getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), MOVE_LEFT);
 		pan.getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), MOVE_RIGHT);
+		pan.getInputMap(IFW).put(KeyStroke.getKeyStroke('j'), SHOOT_BULLET);
 		//binding keys to actions
 		pan.getActionMap().put(MOVE_UP, new MoveAction(1));
 		pan.getActionMap().put(MOVE_DOWN, new MoveAction(2));
 		pan.getActionMap().put(MOVE_LEFT, new MoveAction(3));
 		pan.getActionMap().put(MOVE_RIGHT, new MoveAction(4));
+		pan.getActionMap().put(SHOOT_BULLET, new MoveAction(10));
 		
 
 	}
@@ -99,6 +104,10 @@ public class GUI extends JFrame {
 				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
 				
 			}
+			for( Bullet i : bullets) {
+				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
+				i.updatePosition();
+			}
 			g2.drawRect(playerX, playerY, 10, 10);
 			pan.repaint();
 		}
@@ -126,6 +135,9 @@ public class GUI extends JFrame {
         	}
         	else if (direction == 4) {
         		playerX += playerV;
+        	}
+        	else if (direction == 10) {
+        		bullets.add(new Bullet(playerX,playerY));
         	}
           pan.repaint();
         }

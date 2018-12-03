@@ -2,7 +2,7 @@
 package me.zombies;
 
 public class Enemy {
-	static final int v = 10;
+	static final int v = 2;
 	double x;
 	double y;
 	int vx;

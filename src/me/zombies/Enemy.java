@@ -2,7 +2,7 @@
 package me.zombies;
 
 public class Enemy {
-	static final int v = 10;
+    int v = 10;
 	double x;
 	double y;
 	int vx;
@@ -43,11 +43,10 @@ public class Enemy {
 		
 	}
 	
-	Enemy(int x, int y) {
+	Enemy(int x, int y,int assignV) {
 		this.x = x;
 		this.y = y;
-		this.vx = v;
-		this.vy = v;
+		this.v = assignV;
 	}
 	
 	Enemy(int x, int y,int vx, int vy){

@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -45,9 +46,10 @@ public class GUI extends JFrame {
 	GUI(){
 		birds = new ArrayList<Enemy>();
 		bullets = new ArrayList<Bullet>();
+		Random r = new Random();
 		//create 5 enemies
 		for(int i = 0; i < 5; i++) {
-			birds.add(new Enemy(i*50, i*40));
+			birds.add(new Enemy(i*50, i*40,(r.nextInt(5)+1)*3));
 		}
 		pan = new DrawPanel();
 		
@@ -114,6 +116,8 @@ public class GUI extends JFrame {
 			
 		
 	}
+	
+	
 	
 	private class MoveAction extends AbstractAction {
 		int direction;

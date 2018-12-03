@@ -31,7 +31,7 @@ public class GUI extends JFrame {
 	static final int playerV = 10;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-    static final int T1_SPEED = 20;
+   static final int T1_SPEED = 20;
 	
 
 	public static void main(String[] args) {
@@ -45,7 +45,6 @@ public class GUI extends JFrame {
 		}
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
-		
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 		
 		this.setTitle("Main graphics ..."); 
@@ -68,12 +67,10 @@ public class GUI extends JFrame {
 				i.moveToPosition(player.getX(), player.getY());
 			}
 			pan.repaint();
-
 		}
 	}
 	
 	class DrawPanel extends JPanel {
-					
 		int panSize=600;
 		
 		DrawPanel() {	
@@ -86,6 +83,7 @@ public class GUI extends JFrame {
 			super.paintComponent(g); //clear screen and repaint using background colour
 			this.requestFocus();
 			panSize = this.getWidth();
+			this.requestFocus();
 			
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -146,4 +144,8 @@ public class GUI extends JFrame {
 		}
 		
 	}
+	
+
+
+
 }

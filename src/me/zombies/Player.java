@@ -6,6 +6,8 @@ public class Player {
 	static final int v = 7;
 	int x;
 	int y;
+	int hp = 100;
+	boolean isdead = false;
 	
 	boolean U,R,D,L;
 	
@@ -17,6 +19,7 @@ public class Player {
 	double getX(){
 		return x;
 	}
+	
 	double getY(){
 		return y;
 	}

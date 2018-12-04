@@ -29,10 +29,11 @@ public class GUI extends JFrame {
 	ArrayList<Enemy> birds;
 	Player player;
 
-	static final int playerV = 10;
+	
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
    static final int T1_SPEED = 20;
+   int damage = 20;
 	
 
 	public static void main(String[] args) {
@@ -89,10 +90,29 @@ public class GUI extends JFrame {
 			
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			for( Enemy i : birds) {
+			for(int j = 0; j < birds.size() ; j++) {
+				Enemy i = birds.get(j);
 				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
+				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
+				if (positionXY <= 20) {
+					player.hp -= damage;
+					birds.remove(i);
+				}
+
+				if(player.hp <= 0) {
+					player.isdead = true;
+				}
+				System.out.println(player.hp);
 			}
+			if(player.isdead) {
+				System.out.println("GAME OVER");
+				g.setColor(Color.BLACK);
+				g.fillRect(1000, 1000, 1000, 1000);
+				birds.clear();
+				}
+			else {
 			player.playerDraw(g);
+			}
 		}
 			
 		

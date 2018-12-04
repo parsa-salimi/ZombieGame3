@@ -6,10 +6,12 @@ public class Player {
 	static final int v = 7;
 	int x;
 	int y;
+	int rad = 8;
 	
 	boolean U,R,D,L;
 	
 	Player(int scnx, int scny){
+		System.out.println("sx=" +scnx);
 		this.x = scnx/2;
 		this.y = scny/2;
 	}
@@ -37,6 +39,6 @@ public class Player {
 	}
 	
 	void playerDraw(Graphics g){
-		g.drawOval(this.x, this.y, 15, 15);
+		g.drawOval(this.x, this.y, 2*rad, 2*rad);
 	}
 }

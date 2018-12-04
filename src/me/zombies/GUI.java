@@ -22,17 +22,18 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-
+//TODO add the initialize method thingys
 
 public class GUI extends JFrame {
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
 	Player player;
+	int panSize=600; //initial value;
 
 	static final int playerV = 10;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-   static final int T1_SPEED = 20;
+	static final int T1_SPEED = 20;
 	
 
 	public static void main(String[] args) {
@@ -43,7 +44,7 @@ public class GUI extends JFrame {
 		//create 5 enemies
 		Random r = new Random();
 		for(int i = 0; i < 15; i++) {
-			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(3) + 3));
+			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
 		}
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
@@ -51,14 +52,34 @@ public class GUI extends JFrame {
 		
 		this.setTitle("Main graphics ..."); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.add(pan);	
-		this.pack();
+		this.add(pan);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); //fill full screen no matter what monitor size
+		//this.pack();
 		this.setVisible(true);
+		
+		panSize = this.getWidth();
+		System.out.println(panSize);
 		
 		player = new Player(pan.getWidth(),pan.getHeight());
 		System.out.println("gui run");
 		firstTimer.start();
 	}
+	
+	void resetPlayerPosition() {
+		if (player.getX() > pan.getWidth()-(player.rad*2)) {
+			player.x = pan.getWidth()-(player.rad*2);
+		}
+		if (player.getX() < 0) {
+			player.x = 0;
+		}
+		if (player.getY() > pan.getHeight()-(player.rad*2)) {
+			player.y = pan.getHeight()-(player.rad*2);
+		}
+		if (player.getY() < 0) {
+			player.y = 0;
+		}
+	}
+	
 	
 	private class Timer1Listener  implements ActionListener {
 		@Override
@@ -66,23 +87,38 @@ public class GUI extends JFrame {
 
 			player.movePlayer();
 			for (Enemy i : birds) {
-				i.moveToPosition(player.getX(), player.getY());
+				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}
+			resetPlayerPosition();
 			pan.repaint();
 		}
 	}
 	
+	
 	class DrawPanel extends JPanel {
-		int panSize=600;
 		
 		DrawPanel() {	
 			this.setBackground(Color.WHITE);			
-			this.setPreferredSize(new Dimension(panSize, panSize));		
+			//this.setPreferredSize(new Dimension(panSize, panSize));		
 		}
+		
+		boolean doInit = true;
 		
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g); //clear screen and repaint using background colour
+			
+			/* The following code is designed to initialize data once, but only after the screen is displayed */
+			if (pan.getWidth() < 50) { //screen width is ridiculously small: .: not actually displayed yet
+				return;
+			}
+			
+			if (doInit) {
+				//initializeAllObjects();
+				doInit = false;
+			}
+			/* ****************************** */
+			
 			this.requestFocus();
 			panSize = this.getWidth();
 			this.requestFocus();

@@ -7,6 +7,7 @@ public class Player {
 	int x;
 	int y;
 	int hp = 100;
+	int rad = 8;
 	boolean isdead = false;
 	
 	boolean U,R,D,L;

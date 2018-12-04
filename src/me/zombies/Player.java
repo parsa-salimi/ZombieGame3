@@ -3,7 +3,7 @@ package me.zombies;
 import java.awt.Graphics;
 
 public class Player {
-	static final int v = 3;
+	static final int v = 7;
 	int x;
 	int y;
 	

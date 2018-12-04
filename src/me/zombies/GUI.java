@@ -41,8 +41,9 @@ public class GUI extends JFrame {
 	GUI(){
 		birds = new ArrayList<Enemy>();
 		//create 5 enemies
-		for(int i = 0; i < 5; i++) {
-			birds.add(new Enemy(i*50+1, i*40+1));
+		Random r = new Random();
+		for(int i = 0; i < 15; i++) {
+			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(3) + 3));
 		}
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());

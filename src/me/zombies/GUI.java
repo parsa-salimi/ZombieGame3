@@ -28,6 +28,7 @@ public class GUI extends JFrame {
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
 	Player player;
+	Bullet bullet;
 	int panSize=600; //initial value;
 
 	
@@ -62,6 +63,7 @@ public class GUI extends JFrame {
 		System.out.println(panSize);
 		
 		player = new Player(pan.getWidth(),pan.getHeight());
+		bullet = new Bullet(pan.getWidth(), pan.getHeight());
 		System.out.println("gui run");
 		firstTimer.start();
 	}
@@ -129,11 +131,22 @@ public class GUI extends JFrame {
 			for(int j = 0; j < birds.size() ; j++) {
 				Enemy i = birds.get(j);
 				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
+				
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= damage;
 					birds.remove(i);
 				}
+				
+				double bulletXY = Math.sqrt(Math.pow((bullet.getX() - i.getX()), 2)+ (Math.pow(bullet.getY() - i.getY(), 2)));
+				if (bulletXY <= 20) {
+					i.hp -= damage;
+				}
+			
+				if (i.hp == 0) {
+					birds.remove(i);
+				}
+				
 
 				if(player.hp <= 0) {
 					player.isdead = true;

@@ -29,6 +29,7 @@ import javafx.scene.input.MouseButton;
 //TODO add the initialize method thingys
 
 public class GUI extends JFrame {
+	static final int BULLETSPEED = 20;
 	DrawPanel pan;
 	ML mouse;
 	ArrayList<Enemy> birds;
@@ -36,7 +37,7 @@ public class GUI extends JFrame {
 	int mouseX = 0;
 	int mouseY = 0;
 	boolean rightClick = false;
-	Bullet bullet;
+	ArrayList<Bullet> bullets;
 	int panSize=600; //initial value;
 
 	
@@ -51,6 +52,7 @@ public class GUI extends JFrame {
 			}
 	GUI(){
 		birds = new ArrayList<Enemy>();
+		bullets = new ArrayList<Bullet>();
 		//create 5 enemies
 		Random r = new Random();
 		for(int i = 0; i < 15; i++) {
@@ -73,7 +75,7 @@ public class GUI extends JFrame {
 		System.out.println(panSize);
 		
 		player = new Player(pan.getWidth(),pan.getHeight());
-		bullet = new Bullet(pan.getWidth(), pan.getHeight());
+		//bullet = new Bullet(pan.getWidth(), pan.getHeight());
 		System.out.println("gui run");
 		firstTimer.start();
 	}
@@ -148,14 +150,17 @@ public class GUI extends JFrame {
 					birds.remove(i);
 					System.out.println(mouseX);
 				}
-				
-				double bulletXY = Math.sqrt(Math.pow((bullet.getX() - i.getX()), 2)+ (Math.pow(bullet.getY() - i.getY(), 2)));
-				if (bulletXY <= 20) {
-					i.hp -= damage;
-				}
+				for(Bullet bullet : bullets) {
+					bullet.updatePosition();
+					g2.drawRect((int)bullet.getX(),(int) bullet.getY(), 3, 3);
+					double bulletXY = Math.sqrt(Math.pow((bullet.getX() - i.getX()), 2)+ (Math.pow(bullet.getY() - i.getY(), 2)));
+					if (bulletXY <= 20) {
+						i.hp -= damage;
+					}
 			
-				if (i.hp == 0) {
-					birds.remove(i);
+					if (i.hp == 0) {
+						birds.remove(i);
+					}
 				}
 				
 
@@ -202,6 +207,9 @@ public class GUI extends JFrame {
 			//up on
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=true;
+			}
+			if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+				bullets.add(new Bullet(player.x,player.y,BULLETSPEED, mouseX,mouseY));
 			}
 		}
 

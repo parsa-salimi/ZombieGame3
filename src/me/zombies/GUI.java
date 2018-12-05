@@ -29,7 +29,7 @@ import javafx.scene.input.MouseButton;
 //TODO add the initialize method thingys
 
 public class GUI extends JFrame {
-	static final int BULLETSPEED = 20;
+	static final int BULLETSPEED = 50;
 	DrawPanel pan;
 	ML mouse;
 	ArrayList<Enemy> birds;
@@ -104,6 +104,9 @@ public class GUI extends JFrame {
 			for (Enemy i : birds) {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}
+			for(Bullet b : bullets) {
+				b.updatePosition();
+			}
 			resetPlayerPosition();
 			pan.repaint();
 		}
@@ -151,7 +154,6 @@ public class GUI extends JFrame {
 					System.out.println(mouseX);
 				}
 				for(Bullet bullet : bullets) {
-					bullet.updatePosition();
 					g2.drawRect((int)bullet.getX(),(int) bullet.getY(), 3, 3);
 					double bulletXY = Math.sqrt(Math.pow((bullet.getX() - i.getX()), 2)+ (Math.pow(bullet.getY() - i.getY(), 2)));
 					if (bulletXY <= 20) {
@@ -230,6 +232,9 @@ public class GUI extends JFrame {
 			//up on
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=false;
+			}
+			if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+				
 			}
 		}
 		

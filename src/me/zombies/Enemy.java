@@ -7,6 +7,7 @@ public class Enemy {
 	double y;
 	int vx;
 	int vy;
+	int hp = 20;
 //hehe brennan was here 
 //method
 	//test

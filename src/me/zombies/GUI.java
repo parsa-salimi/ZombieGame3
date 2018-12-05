@@ -34,7 +34,7 @@ public class GUI extends JFrame {
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
    static final int T1_SPEED = 20;
-   int damage = 20;
+   int damage = 10;
 	
 
 	public static void main(String[] args) {

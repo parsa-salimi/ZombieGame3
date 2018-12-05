@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,12 +24,18 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import javafx.scene.input.MouseButton;
+
 //TODO add the initialize method thingys
 
 public class GUI extends JFrame {
 	DrawPanel pan;
+	ML mouse;
 	ArrayList<Enemy> birds;
 	Player player;
+	int mouseX = 0;
+	int mouseY = 0;
+	boolean rightClick = false;
 	Bullet bullet;
 	int panSize=600; //initial value;
 
@@ -35,7 +43,7 @@ public class GUI extends JFrame {
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
    static final int T1_SPEED = 20;
-   int damage = 20;
+   int damage = 10;
 	
 
 	public static void main(String[] args) {
@@ -50,6 +58,8 @@ public class GUI extends JFrame {
 		}
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
+		mouse = new ML();
+		pan.addMouseListener(mouse);
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 		
 		this.setTitle("Main graphics ..."); 
@@ -136,6 +146,7 @@ public class GUI extends JFrame {
 				if (positionXY <= 20) {
 					player.hp -= damage;
 					birds.remove(i);
+					System.out.println(mouseX);
 				}
 				
 				double bulletXY = Math.sqrt(Math.pow((bullet.getX() - i.getX()), 2)+ (Math.pow(bullet.getY() - i.getY(), 2)));
@@ -151,10 +162,10 @@ public class GUI extends JFrame {
 				if(player.hp <= 0) {
 					player.isdead = true;
 				}
-				System.out.println(player.hp);
+				
 			}
 			if(player.isdead) {
-				System.out.println("GAME OVER");
+				//System.out.println("GAME OVER");
 				g.setColor(Color.BLACK);
 				g.fillRect(1000, 1000, 1000, 1000);
 				birds.clear();
@@ -212,6 +223,46 @@ public class GUI extends JFrame {
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=false;
 			}
+		}
+		
+	}
+	
+	class ML implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			mouseX = e.getX();
+			mouseY = e.getY();
+			if(e.getButton() == MouseEvent.BUTTON3) {
+				rightClick = true;
+			}
+			else {
+				rightClick = false;
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}

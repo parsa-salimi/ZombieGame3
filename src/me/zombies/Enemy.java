@@ -2,11 +2,12 @@
 package me.zombies;
 
 public class Enemy {
-	static final int v = 10;
+    int v = 10;
 	double x;
 	double y;
 	int vx;
 	int vy;
+	int hp = 20;
 //hehe brennan was here 
 //method
 	//test
@@ -59,4 +60,4 @@ public class Enemy {
 }
 
 
-	static final int v = 2;
+	

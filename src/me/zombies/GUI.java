@@ -33,11 +33,13 @@ public class GUI extends JFrame {
 	DrawPanel pan;
 	ML mouse;
 	ArrayList<Enemy> birds;
+	ArrayList<Bullet> bullets;
+	ArrayList<Obstacle> obstacles;
 	Player player;
 	int mouseX = 0;
 	int mouseY = 0;
 	boolean rightClick = false;
-	ArrayList<Bullet> bullets;
+	
 	int panSize=600; //initial value;
 
 	
@@ -53,6 +55,7 @@ public class GUI extends JFrame {
 	GUI(){
 		birds = new ArrayList<Enemy>();
 		bullets = new ArrayList<Bullet>();
+		obstacles = new ArrayList<Obstacle>();
 		//create 5 enemies
 		Random r = new Random();
 		for(int i = 0; i < 15; i++) {
@@ -99,8 +102,11 @@ public class GUI extends JFrame {
 	private class Timer1Listener  implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+			
 			player.movePlayer();
+			for(Obstacle o : obstacles) {
+				
+			}
 			for (Enemy i : birds) {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}

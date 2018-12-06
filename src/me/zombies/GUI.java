@@ -7,12 +7,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -24,44 +23,31 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-import javafx.scene.input.MouseButton;
+import com.sun.prism.BasicStroke;
 
 //TODO add the initialize method thingys
 
 public class GUI extends JFrame {
-	static final int BULLETSPEED = 50;
 	DrawPanel pan;
-	ML mouse;
 	ArrayList<Enemy> birds;
 	Player player;
-	int mouseX = 0;
-	int mouseY = 0;
-	boolean rightClick = false;
-	ArrayList<Bullet> bullets;
-	int panSize=600; //initial value;
-
+	int panSize; //initial value;
+	boolean init = false;
+	int birdSpawn = 0;
 	
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
    static final int T1_SPEED = 20;
-   int damage = 10;
+   int damage = 5;
 	
 
 	public static void main(String[] args) {
 				new GUI();
 			}
 	GUI(){
-		birds = new ArrayList<Enemy>();
-		bullets = new ArrayList<Bullet>();
-		//create 5 enemies
-		Random r = new Random();
-		for(int i = 0; i < 15; i++) {
-			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
-		}
+		
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
-		mouse = new ML();
-		pan.addMouseListener(mouse);
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 		
 		this.setTitle("Main graphics ..."); 
@@ -71,13 +57,40 @@ public class GUI extends JFrame {
 		//this.pack();
 		this.setVisible(true);
 		
-		panSize = this.getWidth();
-		System.out.println(panSize);
-		
-		player = new Player(pan.getWidth(),pan.getHeight());
-		//bullet = new Bullet(pan.getWidth(), pan.getHeight());
-		System.out.println("gui run");
+
 		firstTimer.start();
+	}
+	
+	void initializeGameObjects() {
+		panSize = pan.getWidth();
+		System.out.println(pan.getWidth() + "THIS IS THE ACTUAL WIDTH");
+		//player
+		player = new Player(pan.getWidth(),pan.getHeight());
+		System.out.println(pan.getWidth()+" "+pan.getHeight());
+		
+		//enemies
+		birds = new ArrayList<Enemy>();
+		
+		for(int i = 0; i < 15; i++) {
+			addEnemy();
+		}
+	}
+	
+	void addEnemy() {
+		Random r = new Random();
+		birds.add(new Enemy(pan.getWidth(), pan.getHeight(),r.nextInt(6) + 1));
+	}
+	
+	void drawHealth(Graphics2D g2, int hp) {
+		System.out.println(hp);
+		double barw = pan.getWidth()-(pan.getWidth()/5);
+		int hpBar =(int) ((barw/100)*hp); 
+		
+		g2.setColor(new Color (200,200,200));
+		g2.fillRect((pan.getWidth()/10),pan.getHeight()/40,hpBar,pan.getHeight()/20);
+		g2.setColor(Color.BLACK);
+		g2.drawRect((pan.getWidth()/10),pan.getHeight()/40,(int)(barw),pan.getHeight()/20);
+		
 	}
 	
 	void resetPlayerPosition() {
@@ -99,16 +112,25 @@ public class GUI extends JFrame {
 	private class Timer1Listener  implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+			if (!init) {
+				return;
+			}
 			player.movePlayer();
 			for (Enemy i : birds) {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}
-			for(Bullet b : bullets) {
-				b.updatePosition();
-			}
 			resetPlayerPosition();
 			pan.repaint();
+			
+			if (birdSpawn %100 == 0) {
+				for (int i = 0; i < birdSpawn/100; i++) {
+					addEnemy();
+					System.out.println("friends");
+				}
+
+			}
+			birdSpawn++;
+			
 		}
 	}
 	
@@ -132,8 +154,10 @@ public class GUI extends JFrame {
 			}
 			
 			if (doInit) {
-				//initializeAllObjects();
+				initializeGameObjects();
 				doInit = false;
+				init = true;
+				
 			}
 			/* ****************************** */
 			
@@ -146,33 +170,23 @@ public class GUI extends JFrame {
 			for(int j = 0; j < birds.size() ; j++) {
 				Enemy i = birds.get(j);
 				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
-				
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= damage;
+					System.out.println(player.hp);
 					birds.remove(i);
-					System.out.println(mouseX);
 				}
-				for(Bullet bullet : bullets) {
-					g2.drawRect((int)bullet.getX(),(int) bullet.getY(), 3, 3);
-					double bulletXY = Math.sqrt(Math.pow((bullet.getX() - i.getX()), 2)+ (Math.pow(bullet.getY() - i.getY(), 2)));
-					if (bulletXY <= 20) {
-						i.hp -= damage;
-					}
-			
-					if (i.hp == 0) {
-						birds.remove(i);
-					}
-				}
-				
 
 				if(player.hp <= 0) {
 					player.isdead = true;
+					
 				}
-				
 			}
+			
+			drawHealth(g2, player.hp);
+			
 			if(player.isdead) {
-				//System.out.println("GAME OVER");
+				System.out.println("GAME OVER");
 				g.setColor(Color.BLACK);
 				g.fillRect(1000, 1000, 1000, 1000);
 				birds.clear();
@@ -210,9 +224,6 @@ public class GUI extends JFrame {
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=true;
 			}
-			if (e.getKeyCode()==KeyEvent.VK_ENTER) {
-				bullets.add(new Bullet(player.x,player.y,BULLETSPEED, mouseX,mouseY));
-			}
 		}
 
 		@Override
@@ -233,49 +244,6 @@ public class GUI extends JFrame {
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=false;
 			}
-			if (e.getKeyCode()==KeyEvent.VK_ENTER) {
-				
-			}
-		}
-		
-	}
-	
-	class ML implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			mouseX = e.getX();
-			mouseY = e.getY();
-			if(e.getButton() == MouseEvent.BUTTON3) {
-				rightClick = true;
-			}
-			else {
-				rightClick = false;
-			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
 		}
 		
 	}

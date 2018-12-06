@@ -210,9 +210,6 @@ public class GUI extends JFrame {
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=true;
 			}
-			if (e.getKeyCode()==KeyEvent.VK_ENTER) {
-				bullets.add(new Bullet(player.x,player.y,BULLETSPEED, mouseX,mouseY));
-			}
 		}
 
 		@Override
@@ -233,9 +230,6 @@ public class GUI extends JFrame {
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=false;
 			}
-			if (e.getKeyCode()==KeyEvent.VK_ENTER) {
-				
-			}
 		}
 		
 	}
@@ -246,6 +240,7 @@ public class GUI extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
+			bullets.add(new Bullet(player.x,player.y,BULLETSPEED, mouseX,mouseY));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}

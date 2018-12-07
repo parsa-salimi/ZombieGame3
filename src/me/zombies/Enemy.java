@@ -7,7 +7,6 @@ public class Enemy {
 	double y;
 	int vx;
 	int vy;
-	int hp = 20;
 //hehe brennan was here 
 //method
 	//test
@@ -23,6 +22,19 @@ public class Enemy {
 	void UpdatePosition() {
 		x = x+vx;
 		y = y+vy;
+	}
+	
+	void mapSpawn(int scrnx, int scrny) {
+		int r = (int) (Math.random()*2);
+		int r2 = (int) (Math.random()*2);
+	
+		if (r == 0) {
+			x = Math.random()*scrnx;
+			y = r2*scrny;
+		}else if (r == 1) {
+			x = r2*scrnx;
+			y = Math.random()*scrny;
+		}
 	}
 	
 	void moveToPosition(double toX, double toY) {
@@ -45,8 +57,8 @@ public class Enemy {
 	}
 	
 	Enemy(int x, int y,int assignV) {
-		this.x = x;
-		this.y = y;
+		
+		mapSpawn(x,y);
 		this.v = assignV;
 	}
 	

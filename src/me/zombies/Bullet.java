@@ -9,6 +9,7 @@ public class Bullet {
 	double x;
 	double y;
 	
+	
 
 	
 	//given current player position, mouse position, and net velocity

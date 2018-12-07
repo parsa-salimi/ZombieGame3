@@ -46,6 +46,7 @@ public class GUI extends JFrame {
 	boolean rightClick = false;
 	
 	int panSize=600; //initial value;
+	int playerAngle;
 
 	boolean init = false;
 	int birdSpawn = 0;
@@ -90,10 +91,9 @@ public class GUI extends JFrame {
 	void initializeGameObjects() {
 		panSize = pan.getWidth();
 		try {
-			//hull = ImageIO.read(new File("./imgs/hull.png"));
 			hull = ImageIO.read(new File("./res/imgs/hull.png"));
-			//turret = ImageIO.read(new File("./me.imgs/hull.png"));
-			//turretF = ImageIO.read(new File("./me.imgs/hull.png"));
+			turret = ImageIO.read(new File("./res/imgs/turret.png"));
+			turretF = ImageIO.read(new File("./res/imgs/turretF.png"));
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
@@ -225,6 +225,7 @@ public class GUI extends JFrame {
 					player.isdead = true;
 					
 				}
+				player.checkAngle();
 			}
 			
 			drawHealth(g2, player.hp);
@@ -236,7 +237,7 @@ public class GUI extends JFrame {
 				birds.clear();
 				}
 			else {
-			player.playerDraw(g);
+			player.playerDraw(g2, hull);
 			}
 		}
 			

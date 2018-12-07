@@ -1,6 +1,9 @@
 package me.zombies;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 public class Player {
 	static final int v = 7;
@@ -10,6 +13,8 @@ public class Player {
 	int rad = 8;
 	boolean isdead = false;
 	boolean canGoUp,canGoDown,canGoLeft,canGoRight = true;
+	double angle;
+
 	
 	boolean U,R,D,L;
 	
@@ -42,7 +47,44 @@ public class Player {
 		}
 	}
 	
-	void playerDraw(Graphics g){
-		g.drawOval(this.x, this.y, 2*rad, 2*rad);
+	void checkAngle() {
+		//primary angles
+		if (U&&R) {
+			angle = Math.PI/4 + Math.PI/2;
+			return;
+		}
+		if (U&&L) {
+			angle = Math.PI/4;
+			return;
+		}
+		if (D&&L) {
+			angle = -Math.PI/4;
+			return;
+		}
+		if (D&&R) {
+			angle = Math.PI/4 - Math.PI;
+			return;
+		}
+		
+		if (U) {
+			angle = Math.PI/2; 
+		}
+		if (R) {
+			angle = -Math.PI; 
+		}
+		if (D) {
+			angle = -Math.PI/2; 
+		}
+		if (L) {
+			angle = 0; 
+		}
+		
+
+	}
+	
+	void playerDraw(Graphics2D g2d, BufferedImage hull){
+		g2d.rotate(angle, x+7, y+7);
+		g2d.drawImage(hull, x-25, y-24, 64, 64, null);
+		g2d.drawOval(this.x, this.y, 2*rad, 2*rad);
 	}
 }

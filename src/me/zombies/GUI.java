@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -66,7 +68,7 @@ public class GUI extends JFrame {
 		
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
-    pan.addMouseListener(newML());
+		pan.addMouseListener(new ML());
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 		
 		this.setTitle("Main graphics ..."); 
@@ -145,7 +147,9 @@ public class GUI extends JFrame {
 			}
 			resetPlayerPosition();
 			pan.repaint();
-			
+			for(Bullet b : bullets) {
+				b.updatePosition();
+			}
 			if (birdSpawn %100 == 0) {
 				for (int i = 0; i < birdSpawn/100; i++) {
 					addEnemy();
@@ -200,7 +204,9 @@ public class GUI extends JFrame {
 					System.out.println(player.hp);
 					birds.remove(i);
 				}
-
+				for(Bullet b : bullets) {
+					g2.drawRect((int)b.x,(int) b.y, 3, 3);
+				}
 				if(player.hp <= 0) {
 					player.isdead = true;
 					
@@ -279,7 +285,7 @@ public class GUI extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			bullets.add(new Bullet(player.x,player.y,BULLETSPEED, mouseX,mouseY));
+			bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}

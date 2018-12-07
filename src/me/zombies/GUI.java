@@ -14,10 +14,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.AbstractAction;
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,11 +28,13 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-import com.sun.prism.BasicStroke;
 
 //TODO add the initialize method thingys
 
 public class GUI extends JFrame {
+	
+	BufferedImage hull,turret,turretF;
+	
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
 	ArrayList<Bullet> bullets;
@@ -44,7 +49,7 @@ public class GUI extends JFrame {
 
 	boolean init = false;
 	int birdSpawn = 0;
-	
+	int hpMax;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
    static final int T1_SPEED = 20;
@@ -84,11 +89,20 @@ public class GUI extends JFrame {
 	
 	void initializeGameObjects() {
 		panSize = pan.getWidth();
+		try {
+			//hull = ImageIO.read(new File("./imgs/hull.png"));
+			hull = ImageIO.read(new File("./res/imgs/hull.png"));
+			//turret = ImageIO.read(new File("./me.imgs/hull.png"));
+			//turretF = ImageIO.read(new File("./me.imgs/hull.png"));
+		} catch (IOException e) {
+			System.out.println("An image could not be loaded or is missing.");
+			System.exit(0);
+		}
 		System.out.println(pan.getWidth() + "THIS IS THE ACTUAL WIDTH");
 		//player
 		player = new Player(pan.getWidth(),pan.getHeight());
 		System.out.println(pan.getWidth()+" "+pan.getHeight());
-		
+		hpMax = player.hp;
 		//enemies
 		birds = new ArrayList<Enemy>();
 		
@@ -105,7 +119,7 @@ public class GUI extends JFrame {
 	void drawHealth(Graphics2D g2, int hp) {
 		System.out.println(hp);
 		double barw = pan.getWidth()-(pan.getWidth()/5);
-		int hpBar =(int) ((barw/100)*hp); 
+		int hpBar =(int) ((barw/hpMax)*hp); 
 		
 		g2.setColor(new Color (200,200,200));
 		g2.fillRect((pan.getWidth()/10),pan.getHeight()/40,hpBar,pan.getHeight()/20);
@@ -280,6 +294,8 @@ public class GUI extends JFrame {
 	}
 	
 	class ML implements MouseListener {
+
+		private static final int BULLETSPEED = 3;
 
 		@Override
 		public void mouseClicked(MouseEvent e) {

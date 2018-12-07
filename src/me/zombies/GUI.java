@@ -30,8 +30,16 @@ import com.sun.prism.BasicStroke;
 public class GUI extends JFrame {
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
+	ArrayList<Bullet> bullets;
+	ArrayList<Obstacle> obstacles;
 	Player player;
-	int panSize; //initial value;
+
+	int mouseX = 0;
+	int mouseY = 0;
+	boolean rightClick = false;
+	
+	int panSize=600; //initial value;
+
 	boolean init = false;
 	int birdSpawn = 0;
 	
@@ -45,9 +53,20 @@ public class GUI extends JFrame {
 				new GUI();
 			}
 	GUI(){
+
+		birds = new ArrayList<Enemy>();
+		bullets = new ArrayList<Bullet>();
+		obstacles = new ArrayList<Obstacle>();
+		//create 5 enemies
+		Random r = new Random();
+		for(int i = 0; i < 15; i++) {
+			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
+		}
+
 		
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
+    pan.addMouseListener(newML());
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 		
 		this.setTitle("Main graphics ..."); 
@@ -112,10 +131,15 @@ public class GUI extends JFrame {
 	private class Timer1Listener  implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+
 			if (!init) {
 				return;
 			}
+
 			player.movePlayer();
+			for(Obstacle o : obstacles) {
+				
+			}
 			for (Enemy i : birds) {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}
@@ -244,6 +268,48 @@ public class GUI extends JFrame {
 			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
 				player.D=false;
 			}
+
+		}
+		
+	}
+	
+	class ML implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			mouseX = e.getX();
+			mouseY = e.getY();
+			bullets.add(new Bullet(player.x,player.y,BULLETSPEED, mouseX,mouseY));
+			if(e.getButton() == MouseEvent.BUTTON3) {
+				rightClick = true;
+			}
+			else {
+				rightClick = false;
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}

@@ -71,12 +71,12 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 15; i++) {
 			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
 		}
+		
 
 
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
 		pan.addMouseListener(new ML());
-		
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 
 		this.setTitle("Main graphics ..."); 
@@ -91,6 +91,7 @@ public class GUI extends JFrame {
 	}
 
 	void initializeGameObjects() {
+		Random r = new Random();
 		panSize = pan.getWidth();
 		try {
 			//hull = ImageIO.read(new File("./imgs/hull.png"));
@@ -111,6 +112,12 @@ public class GUI extends JFrame {
 
 		for(int i = 0; i < 15; i++) {
 			addEnemy();
+		}
+		
+		for(int i = 0; i < 10; i++) {
+			int upleftx = r.nextInt(pan.getWidth()-40);
+			int uplefty = r.nextInt(pan.getHeight()-40);
+			obstacles.add(new Obstacle(upleftx, uplefty,r.nextInt(40)+10,r.nextInt(40)+10)); 
 		}
 	}
 
@@ -156,19 +163,21 @@ public class GUI extends JFrame {
 			}
 
 			player.movePlayer();
+			player.canGoDown = player.canGoLeft = player.canGoUp = player.canGoRight = true;
 			for(Obstacle o : obstacles) {
-
+				if(o.ULY - player.y < 20 && o.ULY - player.y > 0 
+						&& player.x > o.ULX && player.x < o.ULX + o.W) {
+					player.canGoDown = false;
+				}
 			}
 			for (Enemy i : birds) {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}
 			resetPlayerPosition();
 			pan.repaint();
-			
 			for(Bullet b : bullets) {
 				b.updatePosition();
 			}
-
 			if (birdSpawn %100 == 0) {
 				for (int i = 0; i < birdSpawn/100; i++) {
 					addEnemy();
@@ -199,7 +208,7 @@ public class GUI extends JFrame {
 			if (pan.getWidth() < 50) { //screen width is ridiculously small: .: not actually displayed yet
 				return;
 			}
-
+			
 			if (doInit) {
 				initializeGameObjects();
 				doInit = false;
@@ -223,7 +232,9 @@ public class GUI extends JFrame {
 					System.out.println(player.hp);
 					birds.remove(i);
 				}
-
+				for(Bullet b : bullets) {
+					g2.drawRect((int)b.x,(int) b.y, 3, 3);
+				}
 				if(player.hp <= 0) {
 					player.isdead = true;
 
@@ -243,7 +254,9 @@ public class GUI extends JFrame {
 			}
 
 			drawHealth(g2, player.hp);
-
+			for(Obstacle o: obstacles) {
+				g2.fillRect(o.ULX,o.ULY,o.W,o.H);
+			}
 			if(player.isdead) {
 				System.out.println("GAME OVER");
 				g.setColor(Color.BLACK);
@@ -280,7 +293,7 @@ public class GUI extends JFrame {
 				player.L=true;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
+			if (e.getKeyCode()==KeyEvent.VK_DOWN && player.canGoDown) {
 				player.D=true;
 			}
 		}
@@ -312,21 +325,21 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			mouseX = e.getX();
-			mouseY = e.getY();
-			bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY)); 
+			//mouseX = e.getX();
+			//mouseY = e.getY();
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}
 			else {
 				rightClick = false;
 			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override

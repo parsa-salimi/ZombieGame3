@@ -54,7 +54,7 @@ public class GUI extends JFrame {
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	static final int T1_SPEED = 20;
 	int damage = 5;
-	
+
 	int score = 0;
 
 
@@ -71,7 +71,7 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 15; i++) {
 			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
 		}
-		
+
 
 
 		pan = new DrawPanel();
@@ -113,7 +113,7 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 15; i++) {
 			addEnemy();
 		}
-		
+
 		for(int i = 0; i < 10; i++) {
 			int upleftx = r.nextInt(pan.getWidth()-40);
 			int uplefty = r.nextInt(pan.getHeight()-40);
@@ -208,7 +208,7 @@ public class GUI extends JFrame {
 			if (pan.getWidth() < 50) { //screen width is ridiculously small: .: not actually displayed yet
 				return;
 			}
-			
+
 			if (doInit) {
 				initializeGameObjects();
 				doInit = false;
@@ -242,13 +242,14 @@ public class GUI extends JFrame {
 				for(Bullet b : bullets) {
 					g2.drawRect((int)b.x,(int) b.y, 3, 3);
 				}
-				
-				for (Bullet b : bullets ) {
-					double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
+
+				for (int b = 0; b < bullets.size(); b++) {
+					Bullet c = bullets.get(b);
+					double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
 					if (BulletXY <= 20) {
 						birds.remove(i);
+						bullets.remove(c);
 						score += 100;
-						
 					}
 				}
 			}

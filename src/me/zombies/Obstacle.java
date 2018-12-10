@@ -1,16 +1,16 @@
 package me.zombies;
 
 public class Obstacle {
-	int R;
-	int L;
-	int U;
-	int D;
+	int ULX;
+	int ULY;
+	int W;
+	int H;
 	
-	Obstacle(int up, int right, int down, int left) {
-		this.U = up;
-		this.R = right;
-		this.D = down;
-		this.L= left;
+	Obstacle(int upleftx, int uplefty, int  width, int height) {
+		this.ULX = upleftx;
+		this.ULY = uplefty;
+		this.W = width;
+		this.H= height;
 	}
 	
 }

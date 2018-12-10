@@ -26,17 +26,12 @@ public class Bullet {
 		boolean q2,q3,q4 = false;
 		if(displaceY < 0) {
 			this.vy *= -1;
-			q3 = q4 = true;
-			q1 = q2 = false;
 		}
 
 		if(displaceX < 0) {
 			this.vx *= -1;
-			q2 = q3 = true;
-			q1 = q4 = false;
 		}
 		angle=Math.atan(vy/vx);
-		System.out.println("agnle is  " +  angle);
 		
 	}
 	

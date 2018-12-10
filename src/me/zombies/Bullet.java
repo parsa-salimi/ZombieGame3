@@ -8,6 +8,7 @@ public class Bullet {
 	double vy;
 	double x;
 	double y;
+	double angle;
 	
 
 	
@@ -18,14 +19,37 @@ public class Bullet {
 		y = initY;
 		int displaceX = mouseX - initX;
 		int displaceY = mouseY - initY;
-		double angle = Math.atan(Math.abs(displaceY)/Math.abs(displaceX));
+		angle = Math.atan((double)Math.abs(displaceY)/(double)Math.abs(displaceX));
 		this.vx = v * Math.cos(angle);
 		this.vy = v * Math.sin(angle);
+		boolean q1 = true;
+		boolean q2,q3,q4 = false;
 		if(displaceY < 0) {
 			this.vy *= -1;
+			q3 = q4 = true;
+			q1 = q2 = false;
+		}
+		else {
+			q3 = q4 = false;
+			q1 = q2 = true;
 		}
 		if(displaceX < 0) {
 			this.vx *= -1;
+			q2 = q3 = true;
+			q1 = q4 = false;
+		}
+		else {
+			q2 = q3 = false;
+			q1 = q4 = true;
+		}
+		if(q2) {
+			angle = Math.PI - angle;
+		}
+		if(q3) {
+			angle = Math.PI + angle;
+		}
+		if(q4) {
+			angle = Math.PI*2 - angle;
 		}
 		
 	}
@@ -51,4 +75,5 @@ public class Bullet {
 	double getY() {
 		return this.y;
 	}
+	
 }

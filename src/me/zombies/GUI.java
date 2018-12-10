@@ -314,21 +314,21 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			mouseX = e.getX();
-			mouseY = e.getY();
-			bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
+			//mouseX = e.getX();
+			//mouseY = e.getY();
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}
 			else {
 				rightClick = false;
 			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override

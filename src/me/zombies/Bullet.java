@@ -33,7 +33,6 @@ public class Bullet {
 			this.vx *= -1;
 		}
 		angle=Math.atan(vy/vx);
-		System.out.println("agnle is  " +  angle);
 		
 	}
 	

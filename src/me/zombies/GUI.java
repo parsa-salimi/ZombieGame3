@@ -76,6 +76,7 @@ public class GUI extends JFrame {
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
 		pan.addMouseListener(new ML());
+		
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 
 		this.setTitle("Main graphics ..."); 
@@ -163,6 +164,10 @@ public class GUI extends JFrame {
 			}
 			resetPlayerPosition();
 			pan.repaint();
+			
+			for(Bullet b : bullets) {
+				b.updatePosition();
+			}
 
 			if (birdSpawn %100 == 0) {
 				for (int i = 0; i < birdSpawn/100; i++) {
@@ -211,7 +216,7 @@ public class GUI extends JFrame {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			for(int j = 0; j < birds.size() ; j++) {
 				Enemy i = birds.get(j);
-				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
+				g2.drawRect((int)i.getX(),(int)i.getY(), 13,13);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= damage;
@@ -223,6 +228,10 @@ public class GUI extends JFrame {
 					player.isdead = true;
 
 				}
+				for(Bullet b : bullets) {
+					g2.drawRect((int)b.x,(int) b.y, 3, 3);
+				}
+				
 				for (Bullet b : bullets ) {
 					double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
 					if (BulletXY <= 20) {
@@ -230,8 +239,6 @@ public class GUI extends JFrame {
 						score += 100;
 						
 					}
-					
-					System.out.println(score);
 				}
 			}
 
@@ -303,13 +310,11 @@ public class GUI extends JFrame {
 
 	class ML implements MouseListener {
 
-		private static final int BULLETSPEED = 3;
-
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			bullets.add(new Bullet(player.x,player.y,BULLETSPEED, mouseX,mouseY));
+			bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY)); 
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}

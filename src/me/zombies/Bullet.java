@@ -29,28 +29,14 @@ public class Bullet {
 			q3 = q4 = true;
 			q1 = q2 = false;
 		}
-		else {
-			q3 = q4 = false;
-			q1 = q2 = true;
-		}
+
 		if(displaceX < 0) {
 			this.vx *= -1;
 			q2 = q3 = true;
 			q1 = q4 = false;
 		}
-		else {
-			q2 = q3 = false;
-			q1 = q4 = true;
-		}
-		if(q2) {
-			angle = Math.PI - angle;
-		}
-		if(q3) {
-			angle = Math.PI + angle;
-		}
-		if(q4) {
-			angle = Math.PI*2 - angle;
-		}
+		angle=Math.atan(vy/vx);
+		System.out.println("agnle is  " +  angle);
 		
 	}
 	
@@ -64,6 +50,7 @@ public class Bullet {
 	void updatePosition() {
 		this.x += vx;
 		this.y += vy;
+		
 	}
 	
 

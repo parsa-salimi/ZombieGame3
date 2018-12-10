@@ -33,9 +33,9 @@ import javax.swing.Timer;
 //TODO add the initialize method thingys
 
 public class GUI extends JFrame {
-	
+
 	BufferedImage hull,turret,turretF;
-	
+
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
 	ArrayList<Bullet> bullets;
@@ -54,13 +54,15 @@ public class GUI extends JFrame {
 	int hpMax;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-   static final int T1_SPEED = 20;
-   int damage = 5;
+	static final int T1_SPEED = 20;
+	int damage = 5;
 	
+	int score = 0;
+
 
 	public static void main(String[] args) {
-				new GUI();
-			}
+		new GUI();
+	}
 	GUI(){
 
 		birds = new ArrayList<Enemy>();
@@ -73,24 +75,24 @@ public class GUI extends JFrame {
 		}
 		
 
-		
+
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
 		pan.addMouseListener(new ML());
 		pan.addMouseMotionListener(new ML2());
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
-		
+
 		this.setTitle("Main graphics ..."); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.add(pan);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH); //fill full screen no matter what monitor size
 		//this.pack();
 		this.setVisible(true);
-		
+
 
 		firstTimer.start();
 	}
-	
+
 	void initializeGameObjects() {
 		Random r = new Random();
 		panSize = pan.getWidth();
@@ -108,7 +110,7 @@ public class GUI extends JFrame {
 		hpMax = player.hp;
 		//enemies
 		birds = new ArrayList<Enemy>();
-		
+
 		for(int i = 0; i < 15; i++) {
 			addEnemy();
 		}
@@ -119,23 +121,23 @@ public class GUI extends JFrame {
 			obstacles.add(new Obstacle(upleftx, uplefty,r.nextInt(40)+10,r.nextInt(40)+10)); 
 		}
 	}
-	
+
 	void addEnemy() {
 		Random r = new Random();
 		birds.add(new Enemy(pan.getWidth(), pan.getHeight(),r.nextInt(6) + 1));
 	}
-	
+
 	void drawHealth(Graphics2D g2, int hp) {
 		double barw = pan.getWidth()-(pan.getWidth()/5);
 		int hpBar =(int) ((barw/hpMax)*hp); 
-		
+
 		g2.setColor(new Color (200,200,200));
 		g2.fillRect((pan.getWidth()/10),pan.getHeight()/40,hpBar,pan.getHeight()/20);
 		g2.setColor(Color.BLACK);
 		g2.drawRect((pan.getWidth()/10),pan.getHeight()/40,(int)(barw),pan.getHeight()/20);
-		
+
 	}
-	
+
 	void resetPlayerPosition() {
 		if (player.getX() > pan.getWidth()-(player.rad*2)) {
 			player.x = pan.getWidth()-(player.rad*2);
@@ -150,8 +152,8 @@ public class GUI extends JFrame {
 			player.y = 0;
 		}
 	}
-	
-	
+
+
 	private class Timer1Listener  implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -183,47 +185,46 @@ public class GUI extends JFrame {
 
 			}
 			birdSpawn++;
-			
+
 		}
 	}
-	
-	
+
+
 	class DrawPanel extends JPanel {
-		
+
 		DrawPanel() {	
 			this.setBackground(Color.WHITE);			
 			//this.setPreferredSize(new Dimension(panSize, panSize));		
 		}
-		
+
 		boolean doInit = true;
-		
+
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g); //clear screen and repaint using background colour
-			
+
 			/* The following code is designed to initialize data once, but only after the screen is displayed */
 			if (pan.getWidth() < 50) { //screen width is ridiculously small: .: not actually displayed yet
 				return;
 			}
 			
-
 			if (doInit) {
 				initializeGameObjects();
 				doInit = false;
 				init = true;
-				
+
 			}
 			/* ****************************** */
-			
+
 			this.requestFocus();
 			panSize = this.getWidth();
 			this.requestFocus();
-			
+
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			for(int j = 0; j < birds.size() ; j++) {
 				Enemy i = birds.get(j);
-				g2.drawRect((int)i.getX(),(int)i.getY(), 2,2);
+				g2.drawRect((int)i.getX(),(int)i.getY(), 13,13);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= damage;
@@ -234,10 +235,22 @@ public class GUI extends JFrame {
 				}
 				if(player.hp <= 0) {
 					player.isdead = true;
-					
+
+				}
+				for(Bullet b : bullets) {
+					g2.drawRect((int)b.x,(int) b.y, 3, 3);
+				}
+				
+				for (Bullet b : bullets ) {
+					double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
+					if (BulletXY <= 20) {
+						birds.remove(i);
+						score += 100;
+						
+					}
 				}
 			}
-			
+
 			drawHealth(g2, player.hp);
 			for(Obstacle o: obstacles) {
 				g2.fillRect(o.ULX,o.ULY,o.W,o.H);
@@ -247,15 +260,15 @@ public class GUI extends JFrame {
 				g.setColor(Color.BLACK);
 				g.fillRect(1000, 1000, 1000, 1000);
 				birds.clear();
-				}
+			}
 			else {
-			player.playerDraw(g);
+				player.playerDraw(g);
 			}
 		}
-			
-		
+
+
 	}
-	
+
 	class KL implements KeyListener {
 
 		@Override
@@ -303,12 +316,10 @@ public class GUI extends JFrame {
 			}
 
 		}
-		
-	}
-	
-	class ML implements MouseListener {
 
-		private static final int BULLETSPEED = 3;
+	}
+
+	class ML implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -332,21 +343,21 @@ public class GUI extends JFrame {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 	class ML2 implements MouseMotionListener {
 
@@ -379,6 +390,7 @@ public class GUI extends JFrame {
 		
 	}
 	
+
 
 
 

@@ -7,7 +7,7 @@ public class Player {
 	int x;
 	int y;
 	int hp = 1000;
-	int rad = 8;
+	int rad = 13;
 	boolean isdead = false;
 	boolean canGoUp,canGoDown,canGoLeft,canGoRight = true;
 	

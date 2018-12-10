@@ -9,8 +9,8 @@ public class Player {
 	static final int v = 7;
 	int x;
 	int y;
-	int hp = 1000;
-	int rad = 13;
+	int hp = 100000;
+	int rad = 8;
 	boolean isdead = false;
 	boolean canGoUp,canGoDown,canGoLeft,canGoRight = true;
 	double angle;
@@ -70,7 +70,7 @@ public class Player {
 			angle = Math.PI/2; 
 		}
 		if (R) {
-			angle = -Math.PI; 
+			angle = Math.PI; 
 		}
 		if (D) {
 			angle = -Math.PI/2; 
@@ -82,9 +82,11 @@ public class Player {
 
 	}
 	
-	void playerDraw(Graphics2D g2d, BufferedImage hull){
+	void playerDraw(Graphics2D g2d, BufferedImage hull, BufferedImage turret, double turretAngle){
 		g2d.rotate(angle, x+7, y+7);
 		g2d.drawImage(hull, x-25, y-24, 64, 64, null);
 		g2d.drawOval(this.x, this.y, 2*rad, 2*rad);
+		g2d.rotate(turretAngle, x+7, y+7);
+		g2d.drawImage(turret, x-60, y-56, 128, 128, null);
 	}
 }

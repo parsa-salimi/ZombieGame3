@@ -8,6 +8,7 @@ public class Enemy {
 	int vx;
 	int vy;
 	int hp = 20;
+	double angle;
 //hehe brennan was here 
 //method
 	//test
@@ -41,7 +42,7 @@ public class Enemy {
 	void moveToPosition(double toX, double toY) {
 		double dispX =  toX - x;
 		double dispY = (toY - y);
-		double angle = Math.atan(Math.abs(dispY) /Math.abs(dispX));
+		angle = Math.atan(Math.abs(dispY) /Math.abs(dispX));
 		if(dispY < 0) {
 			y -= v * Math.sin(angle);
 		}

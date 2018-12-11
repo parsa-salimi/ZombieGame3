@@ -34,7 +34,7 @@ import javax.swing.Timer;
 
 public class GUI extends JFrame {
 
-	BufferedImage hull,turret,turretF,backG;
+	BufferedImage hull,turret,turretF,backG,barrier,enemy;
 
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
@@ -71,7 +71,7 @@ public class GUI extends JFrame {
 		obstacles = new ArrayList<Obstacle>();
 		//create 5 enemies
 		Random r = new Random();
-		for(int i = 0; i < 15; i++) {
+		for(int i = 0; i < 2; i++) {
 			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
 		}
 		
@@ -102,7 +102,8 @@ public class GUI extends JFrame {
 			turret = ImageIO.read(new File("./res/imgs/turret.png"));
 			turretF = ImageIO.read(new File("./res/imgs/turretF.png"));
 			backG = ImageIO.read(new File("./res/imgs/backG.png"));
-			
+			barrier = ImageIO.read(new File("./res/imgs/barrier.png"));
+			enemy = ImageIO.read(new File("./res/imgs/enemy.png"));
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
@@ -113,7 +114,7 @@ public class GUI extends JFrame {
 		//enemies
 		birds = new ArrayList<Enemy>();
 
-		for(int i = 0; i < 15; i++) {
+		for(int i = 0; i < 1; i++) {
 			addEnemy();
 		}
 		
@@ -182,12 +183,14 @@ public class GUI extends JFrame {
 			}
 			if (birdSpawn %100 == 0) {
 				for (int i = 0; i < birdSpawn/100; i++) {
-					addEnemy();
+					if (birds.size() >= 100){
+						System.out.println("nope");
+					} else {
+						addEnemy();
+					}	
 				}
-
 			}
 			birdSpawn++;
-
 		}
 	}
 
@@ -229,7 +232,10 @@ public class GUI extends JFrame {
 			for(int j = 0; j < birds.size() ; j++) {
 				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
-				g2.drawRect((int)i.getX(),(int)i.getY(), 13,13);
+				
+				g2.rotate(i.angle, i.x,i.y);
+				g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
+				g2.rotate(0-i.angle, i.x, i.y);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= damage;
@@ -261,6 +267,7 @@ public class GUI extends JFrame {
 			drawHealth(g2, player.hp);
 			for(Obstacle o: obstacles) {
 				g2.fillRect(o.ULX,o.ULY,o.W,o.H);
+				g.drawImage(barrier, o.ULX, o.ULY, o.W, o.H, null);
 			}
 			if(player.isdead) {
 				System.out.println("GAME OVER");
@@ -378,7 +385,7 @@ public class GUI extends JFrame {
 			public void mouseMoved(MouseEvent e) {
 			int dispX = e.getX() - player.x;
 			int dispY = -(e.getY() - player.y);
-		   angle = Math.atan((double)Math.abs(dispY)/(double)Math.abs((dispX)));
+			angle = Math.atan((double)Math.abs(dispY)/(double)Math.abs((dispX)));
 			if(dispY < 0) {
 				if(dispX < 0) {
 					angle += Math.PI;

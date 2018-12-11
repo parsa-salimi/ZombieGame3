@@ -386,6 +386,7 @@ public class GUI extends JFrame {
 					angle = Math.PI - angle;
 				}
 			  }
+			angle *= -1;
 			}
 			
 		

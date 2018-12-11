@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +45,10 @@ public class GUI extends JFrame {
 	int mouseX = 0;
 	int mouseY = 0;
 	boolean rightClick = false;
-
+	double angle;
+	
 	int panSize=600; //initial value;
+	int playerAngle;
 
 	boolean init = false;
 	int birdSpawn = 0;
@@ -77,6 +80,7 @@ public class GUI extends JFrame {
 		pan = new DrawPanel();
 		pan.addKeyListener(new KL());
 		pan.addMouseListener(new ML());
+		pan.addMouseMotionListener(new ML2());
 		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 
 		this.setTitle("Main graphics ..."); 
@@ -94,18 +98,15 @@ public class GUI extends JFrame {
 		Random r = new Random();
 		panSize = pan.getWidth();
 		try {
-			//hull = ImageIO.read(new File("./imgs/hull.png"));
 			hull = ImageIO.read(new File("./res/imgs/hull.png"));
-			//turret = ImageIO.read(new File("./me.imgs/hull.png"));
-			//turretF = ImageIO.read(new File("./me.imgs/hull.png"));
+			turret = ImageIO.read(new File("./res/imgs/turret.png"));
+			turretF = ImageIO.read(new File("./res/imgs/turretF.png"));
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
 		}
-		System.out.println(pan.getWidth() + "THIS IS THE ACTUAL WIDTH");
 		//player
 		player = new Player(pan.getWidth(),pan.getHeight());
-		System.out.println(pan.getWidth()+" "+pan.getHeight());
 		hpMax = player.hp;
 		//enemies
 		birds = new ArrayList<Enemy>();
@@ -127,7 +128,6 @@ public class GUI extends JFrame {
 	}
 
 	void drawHealth(Graphics2D g2, int hp) {
-		System.out.println(hp);
 		double barw = pan.getWidth()-(pan.getWidth()/5);
 		int hpBar =(int) ((barw/hpMax)*hp); 
 
@@ -181,7 +181,6 @@ public class GUI extends JFrame {
 			if (birdSpawn %100 == 0) {
 				for (int i = 0; i < birdSpawn/100; i++) {
 					addEnemy();
-					System.out.println("friends");
 				}
 
 			}
@@ -229,7 +228,6 @@ public class GUI extends JFrame {
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= damage;
-					System.out.println(player.hp);
 					birds.remove(i);
 				}
 				for(Bullet b : bullets) {
@@ -252,6 +250,7 @@ public class GUI extends JFrame {
 						score += 100;
 					}
 				}
+				player.checkAngle();
 			}
 
 			drawHealth(g2, player.hp);
@@ -265,7 +264,7 @@ public class GUI extends JFrame {
 				birds.clear();
 			}
 			else {
-				player.playerDraw(g);
+			player.playerDraw(g2, hull);
 			}
 		}
 
@@ -326,8 +325,7 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			//mouseX = e.getX();
-			//mouseY = e.getY();
+			
 
 		}
 
@@ -342,6 +340,7 @@ public class GUI extends JFrame {
 				rightClick = false;
 			}
 		}
+
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
@@ -362,6 +361,37 @@ public class GUI extends JFrame {
 		}
 
 	}
+	class ML2 implements MouseMotionListener {
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+			public void mouseMoved(MouseEvent e) {
+			int dispX = e.getX() - player.x;
+			int dispY = -(e.getY() - player.y);
+		   angle = Math.atan((double)Math.abs(dispY)/(double)Math.abs((dispX)));
+			if(dispY < 0) {
+				if(dispX < 0) {
+					angle += Math.PI;
+				}
+				else {
+					angle = Math.PI*2 - angle;
+				}
+			}
+			else {
+				if(dispX < 0) {
+					angle = Math.PI - angle;
+				}
+			  }
+			}
+			
+		
+	}
+	
 
 
 

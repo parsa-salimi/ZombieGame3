@@ -264,7 +264,7 @@ public class GUI extends JFrame {
 				birds.clear();
 			}
 			else {
-			player.playerDraw(g2, hull);
+			player.playerDraw(g2, hull,turret, angle);
 			}
 		}
 

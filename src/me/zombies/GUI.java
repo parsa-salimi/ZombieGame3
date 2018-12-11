@@ -255,7 +255,7 @@ public class GUI extends JFrame {
 
 			drawHealth(g2, player.hp);
 			for(Obstacle o: obstacles) {
-				g2.fillRect(o.ULX,o.ULY,o.W,o.H);
+				g2.fillRect(o.ULX,o.ULY,o.W,o.H); 
 			}
 			if(player.isdead) {
 				System.out.println("GAME OVER");
@@ -267,7 +267,6 @@ public class GUI extends JFrame {
 			player.playerDraw(g2, hull);
 			}
 		}
-
 
 	}
 

@@ -12,5 +12,4 @@ public class Obstacle {
 		this.W = width;
 		this.H= height;
 	}
-	
 }

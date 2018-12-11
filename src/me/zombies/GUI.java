@@ -34,7 +34,7 @@ import javax.swing.Timer;
 
 public class GUI extends JFrame {
 
-	BufferedImage hull,turret,turretF;
+	BufferedImage hull,turret,turretF,backG;
 
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
@@ -101,6 +101,8 @@ public class GUI extends JFrame {
 			hull = ImageIO.read(new File("./res/imgs/hull.png"));
 			turret = ImageIO.read(new File("./res/imgs/turret.png"));
 			turretF = ImageIO.read(new File("./res/imgs/turretF.png"));
+			backG = ImageIO.read(new File("./res/imgs/backG.png"));
+			
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
@@ -222,7 +224,10 @@ public class GUI extends JFrame {
 
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
+			
 			for(int j = 0; j < birds.size() ; j++) {
+				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
 				g2.drawRect((int)i.getX(),(int)i.getY(), 13,13);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
@@ -238,6 +243,7 @@ public class GUI extends JFrame {
 
 				}
 				for(Bullet b : bullets) {
+					g.setColor(Color.RED);
 					g2.drawRect((int)b.x,(int) b.y, 3, 3);
 				}
 				

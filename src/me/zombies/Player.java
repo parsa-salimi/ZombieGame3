@@ -3,6 +3,7 @@ package me.zombies;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Player {
@@ -83,9 +84,11 @@ public class Player {
 	}
 	
 	void playerDraw(Graphics2D g2d, BufferedImage hull, BufferedImage turret, double turretAngle){
+		AffineTransform old = g2d.getTransform();
 		g2d.rotate(angle, x+7, y+7);
 		g2d.drawImage(hull, x-25, y-24, 64, 64, null);
 		g2d.drawOval(this.x, this.y, 2*rad, 2*rad);
+		g2d.setTransform(old);
 		g2d.rotate(turretAngle, x+7, y+7);
 		g2d.drawImage(turret, x-60, y-56, 128, 128, null);
 	}

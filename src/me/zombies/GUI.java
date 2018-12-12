@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
@@ -34,12 +35,12 @@ import javax.swing.Timer;
 
 public class GUI extends JFrame {
 
-	BufferedImage hull,turret,turretF;
+	BufferedImage hull,turret,turretF,backG;
 
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
 	ArrayList<Bullet> bullets;
-	ArrayList<Obstacle> obstacles;
+	ArrayList<Rectangle> obstacles;
 	Player player;
 
 	int mouseX = 0;
@@ -68,7 +69,7 @@ public class GUI extends JFrame {
 
 		birds = new ArrayList<Enemy>();
 		bullets = new ArrayList<Bullet>();
-		obstacles = new ArrayList<Obstacle>();
+		obstacles = new ArrayList<Rectangle>();
 		//create 5 enemies
 		Random r = new Random();
 		for(int i = 0; i < 15; i++) {
@@ -101,6 +102,8 @@ public class GUI extends JFrame {
 			hull = ImageIO.read(new File("./res/imgs/hull.png"));
 			turret = ImageIO.read(new File("./res/imgs/turret.png"));
 			turretF = ImageIO.read(new File("./res/imgs/turretF.png"));
+			backG = ImageIO.read(new File("./res/imgs/backG.png"));
+			
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
@@ -118,7 +121,7 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 10; i++) {
 			int upleftx = r.nextInt(pan.getWidth()-40);
 			int uplefty = r.nextInt(pan.getHeight()-40);
-			obstacles.add(new Obstacle(upleftx, uplefty,r.nextInt(40)+10,r.nextInt(40)+10)); 
+			obstacles.add(new Rectangle(upleftx, uplefty,r.nextInt(40)+10,r.nextInt(40)+10)); 
 		}
 	}
 
@@ -164,10 +167,26 @@ public class GUI extends JFrame {
 
 			player.movePlayer();
 			player.canGoDown = player.canGoLeft = player.canGoUp = player.canGoRight = true;
-			for(Obstacle o : obstacles) {
-				if(o.ULY - player.y < 20 && o.ULY - player.y > 0 
-						&& player.x > o.ULX && player.x < o.ULX + o.W) {
-					player.canGoDown = false;
+			Rectangle pRect = new Rectangle(player.x,player.y,48,48);
+			for(Rectangle o : obstacles) {
+				if(o.intersects(pRect)) {
+					if(o.getX() > pRect.getX()) {
+						player.R = false;
+						player.canGoRight = false;
+					}
+					if(o.getX() < pRect.getX() && o.getX() + o.getWidth() > pRect.getX()) {
+						player.L = false;
+						player.canGoLeft = false;
+					}
+					if(o.getY() < player.getY()) {
+						player.D = false;
+						player.canGoDown = false;
+					}
+					if(o.getY() > player.getY()
+					 && o.getY() - o.getHeight() < player.getY()) {
+						player.U = false;
+						player.canGoUp = false;
+					}
 				}
 			}
 			for (Enemy i : birds) {
@@ -222,7 +241,10 @@ public class GUI extends JFrame {
 
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
 			for(int j = 0; j < birds.size() ; j++) {
+				g.setColor(Color.PINK);
+				
 				Enemy i = birds.get(j);
 				g2.drawRect((int)i.getX(),(int)i.getY(), 13,13);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
@@ -238,6 +260,7 @@ public class GUI extends JFrame {
 
 				}
 				for(Bullet b : bullets) {
+					g.setColor(Color.RED);
 					g2.drawRect((int)b.x,(int) b.y, 3, 3);
 				}
 
@@ -254,8 +277,8 @@ public class GUI extends JFrame {
 			}
 
 			drawHealth(g2, player.hp);
-			for(Obstacle o: obstacles) {
-				g2.fillRect(o.ULX,o.ULY,o.W,o.H);
+			for(Rectangle o: obstacles) {
+				g2.fillRect((int)o.getX(),(int)o.getY(),(int)o.getWidth(),(int)o.getHeight());
 			}
 			if(player.isdead) {
 				System.out.println("GAME OVER");
@@ -281,15 +304,15 @@ public class GUI extends JFrame {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_UP) {
+			if (e.getKeyCode()==KeyEvent.VK_UP && player.canGoUp) {
 				player.U=true;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+			if (e.getKeyCode()==KeyEvent.VK_RIGHT &&player.canGoRight) {
 				player.R=true;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+			if (e.getKeyCode()==KeyEvent.VK_LEFT && player.canGoLeft) {
 				player.L=true;
 			}
 			//up on
@@ -387,6 +410,7 @@ public class GUI extends JFrame {
 					angle = Math.PI - angle;
 				}
 			  }
+			angle *= -1;
 			}
 			
 		

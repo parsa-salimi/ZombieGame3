@@ -61,6 +61,7 @@ public class GUI extends JFrame {
 	
 	int score = 0;
 
+	Rectangle pRect;
 
 	public static void main(String[] args) {
 		new GUI();
@@ -167,23 +168,28 @@ public class GUI extends JFrame {
 
 			player.movePlayer();
 			player.canGoDown = player.canGoLeft = player.canGoUp = player.canGoRight = true;
-			Rectangle pRect = new Rectangle(player.x,player.y,48,48);
+			
+			if(player.upDown) {
+				pRect = new Rectangle(player.x -7, player.y -25, 33, 64);
+			}
+			else {
+				pRect = new Rectangle(player.x-25, player.y-10, 64, 33);
+			}
 			for(Rectangle o : obstacles) {
 				if(o.intersects(pRect)) {
 					if(o.getX() > pRect.getX()) {
 						player.R = false;
 						player.canGoRight = false;
 					}
-					if(o.getX() < pRect.getX() && o.getX() + o.getWidth() > pRect.getX()) {
+					if(o.getX() < pRect.getX() ) {
 						player.L = false;
 						player.canGoLeft = false;
 					}
-					if(o.getY() < player.getY()) {
+					if(o.getY()  < player.getY() +64) {
 						player.D = false;
 						player.canGoDown = false;
 					}
-					if(o.getY() > player.getY()
-					 && o.getY() - o.getHeight() < player.getY()) {
+					if(o.getY() + o.getHeight() < player.getY()) {
 						player.U = false;
 						player.canGoUp = false;
 					}
@@ -305,18 +311,22 @@ public class GUI extends JFrame {
 			//up on
 			if (e.getKeyCode()==KeyEvent.VK_UP && player.canGoUp) {
 				player.U=true;
+				player.upDown = true;
 			}
 			//up on
 			if (e.getKeyCode()==KeyEvent.VK_RIGHT &&player.canGoRight) {
 				player.R=true;
+				player.upDown = false;
 			}
 			//up on
 			if (e.getKeyCode()==KeyEvent.VK_LEFT && player.canGoLeft) {
 				player.L=true;
+				player.upDown = false;
 			}
 			//up on
 			if (e.getKeyCode()==KeyEvent.VK_DOWN && player.canGoDown) {
 				player.D=true;
+				player.upDown = true;
 			}
 		}
 

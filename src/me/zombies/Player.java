@@ -7,7 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Player {
-	static final int v = 7;
+	static final int v = 6;
 	int x;
 	int y;
 	int hp = 500;

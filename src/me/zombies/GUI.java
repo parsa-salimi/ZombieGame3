@@ -46,18 +46,17 @@ public class GUI extends JFrame {
 	int mouseY = 0;
 	boolean rightClick = false;
 	double angle;
-	
+
 	int panSize=600; //initial value;
 	int playerAngle;
 
 	boolean init = false;
-	int birdSpawn = 0;
+	int timerTick = 0;
 	int hpMax;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	static final int T1_SPEED = 20;
 	int damage = 5;
-	
 	int score = 0;
 
 
@@ -74,7 +73,7 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 2; i++) {
 			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
 		}
-		
+
 
 
 		pan = new DrawPanel();
@@ -117,7 +116,7 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 1; i++) {
 			addEnemy();
 		}
-		
+
 		for(int i = 0; i < 10; i++) {
 			int upleftx = r.nextInt(pan.getWidth()-40);
 			int uplefty = r.nextInt(pan.getHeight()-40);
@@ -156,6 +155,89 @@ public class GUI extends JFrame {
 		}
 	}
 
+	void playerActions() {
+		player.movePlayer();
+		player.canGoDown = player.canGoLeft = player.canGoUp = player.canGoRight = true;
+		for(Obstacle o : obstacles) {
+			if(o.ULY - player.y < 20 && o.ULY - player.y > 0 
+					&& player.x > o.ULX && player.x < o.ULX + o.W) {
+				player.canGoDown = false;
+			}
+		}
+	}
+	
+	void bulletActions() {
+		for(Bullet b : bullets) {
+			b.updatePosition();
+		}
+		if (rightClick) {
+			if (timerTick %7 == 0) {
+				bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
+			}
+			
+		}
+	}
+	
+	void enemyActions() {
+		for (Enemy b : birds) {
+			b.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
+		}
+		if (timerTick %100 == 0) {
+			for (int i = 0; i < timerTick/100; i++) {
+				if (birds.size() >= 100){
+					System.out.println("nope");
+				} else {
+					addEnemy();
+				}	
+			}
+		}
+		timerTick++;
+	}
+	
+	void gameStuff() {
+		for(int j = 0; j < birds.size() ; j++) {
+			Enemy i = birds.get(j);
+			double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
+			if (positionXY <= 20) {
+				player.hp -= damage;
+				birds.remove(i);
+			}
+			if(player.hp <= 0) {
+				player.isdead = true;
+
+			}
+			for (Bullet b : bullets ) {
+				double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
+				if (BulletXY <= 20) {
+					birds.remove(i);
+					score += 100;
+
+				}
+			}
+			player.checkAngle();
+			updateTurretAngle();
+		}
+	}
+	
+	void updateTurretAngle() {
+		int dispX = mouseX - player.x;
+		int dispY = -(mouseY - player.y);
+		angle = Math.atan((double)Math.abs(dispY)/(double)Math.abs((dispX)));
+		if(dispY < 0) {
+			if(dispX < 0) {
+				angle += Math.PI;
+			}
+			else {
+				angle = Math.PI*2 - angle;
+			}
+		}
+		else {
+			if(dispX < 0) {
+				angle = Math.PI - angle;
+			}
+		}
+		angle *= -1;
+	}
 
 	private class Timer1Listener  implements ActionListener {
 		@Override
@@ -164,33 +246,16 @@ public class GUI extends JFrame {
 			if (!init) {
 				return;
 			}
-
-			player.movePlayer();
-			player.canGoDown = player.canGoLeft = player.canGoUp = player.canGoRight = true;
-			for(Obstacle o : obstacles) {
-				if(o.ULY - player.y < 20 && o.ULY - player.y > 0 
-						&& player.x > o.ULX && player.x < o.ULX + o.W) {
-					player.canGoDown = false;
-				}
-			}
-			for (Enemy i : birds) {
-				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
-			}
+			
+			playerActions();
+			enemyActions();			
+			bulletActions();
+			
+			gameStuff();
 			resetPlayerPosition();
+			
 			pan.repaint();
-			for(Bullet b : bullets) {
-				b.updatePosition();
-			}
-			if (birdSpawn %100 == 0) {
-				for (int i = 0; i < birdSpawn/100; i++) {
-					if (birds.size() >= 100){
-						System.out.println("nope");
-					} else {
-						addEnemy();
-					}	
-				}
-			}
-			birdSpawn++;
+
 		}
 	}
 
@@ -212,7 +277,7 @@ public class GUI extends JFrame {
 			if (pan.getWidth() < 50) { //screen width is ridiculously small: .: not actually displayed yet
 				return;
 			}
-			
+
 			if (doInit) {
 				initializeGameObjects();
 				doInit = false;
@@ -228,42 +293,25 @@ public class GUI extends JFrame {
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
-			
+
 			for(int j = 0; j < birds.size() ; j++) {
 				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
-				
-				g2.rotate(i.angle, i.x,i.y);
+				g2.rotate(i.accurateAngle, i.x,i.y);
+				System.out.println("angle in RAD"+i.accurateAngle);
 				g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
-				g2.rotate(0-i.angle, i.x, i.y);
-				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
-				if (positionXY <= 20) {
-					player.hp -= damage;
-					birds.remove(i);
-				}
-				for(Bullet b : bullets) {
-					g2.drawRect((int)b.x,(int) b.y, 3, 3);
-				}
-				if(player.hp <= 0) {
-					player.isdead = true;
-
-				}
-				for(Bullet b : bullets) {
-					g.setColor(Color.RED);
-					g2.drawRect((int)b.x,(int) b.y, 3, 3);
-				}
-				
-				for (Bullet b : bullets ) {
-					double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
-					if (BulletXY <= 20) {
-						birds.remove(i);
-						score += 100;
-						
-					}
-				}
-				player.checkAngle();
+				g2.rotate(0-i.accurateAngle, i.x, i.y);
 			}
-
+			
+			for(Bullet b : bullets) {
+				g.setColor(Color.GREEN);
+				g2.fillOval((int)b.x,(int) b.y, 3, 3);
+				g.setColor(Color.WHITE);
+				g2.drawOval((int)b.x,(int) b.y, 3, 3);
+			}
+			
+			
+			
 			drawHealth(g2, player.hp);
 			for(Obstacle o: obstacles) {
 				g2.fillRect(o.ULX,o.ULY,o.W,o.H);
@@ -276,7 +324,7 @@ public class GUI extends JFrame {
 				birds.clear();
 			}
 			else {
-			player.playerDraw(g2, hull,turret, angle);
+				player.playerDraw(g2, hull,turret, angle);
 			}
 		}
 
@@ -337,26 +385,27 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
+
 
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+
+			//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
-			}
-			else {
-				rightClick = false;
-			}
+			}		
+			
 		}
 
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getButton() == MouseEvent.BUTTON3) {
+				rightClick = false;
+			}
 
 		}
 
@@ -377,34 +426,21 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			// TODO Auto-generated method stub
+			mouseX = e.getX();
+			mouseY = e.getY();
 			
 		}
 
 		@Override
-			public void mouseMoved(MouseEvent e) {
-			int dispX = e.getX() - player.x;
-			int dispY = -(e.getY() - player.y);
-			angle = Math.atan((double)Math.abs(dispY)/(double)Math.abs((dispX)));
-			if(dispY < 0) {
-				if(dispX < 0) {
-					angle += Math.PI;
-				}
-				else {
-					angle = Math.PI*2 - angle;
-				}
-			}
-			else {
-				if(dispX < 0) {
-					angle = Math.PI - angle;
-				}
-			  }
-			angle *= -1;
-			}
+		public void mouseMoved(MouseEvent e) {
+			mouseX = e.getX();
+			mouseY = e.getY();
 			
-		
+		}
+
+
 	}
-	
+
 
 
 

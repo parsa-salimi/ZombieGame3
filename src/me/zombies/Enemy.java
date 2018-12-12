@@ -2,13 +2,14 @@
 package me.zombies;
 
 public class Enemy {
-    int v = 10;
+    double v = 10.0;
 	double x;
 	double y;
-	int vx;
-	int vy;
+	double vx;
+	double vy;
 	int hp = 20;
 	double angle;
+	double accurateAngle;
 //hehe brennan was here 
 //method
 	//test
@@ -21,7 +22,7 @@ public class Enemy {
 		return y;
 	}
 	
-	void UpdatePosition() {
+	void updatePosition() {
 		x = x+vx;
 		y = y+vy;
 	}
@@ -42,19 +43,12 @@ public class Enemy {
 	void moveToPosition(double toX, double toY) {
 		double dispX =  toX - x;
 		double dispY = (toY - y);
-		angle = Math.atan(Math.abs(dispY) /Math.abs(dispX));
-		if(dispY < 0) {
-			y -= v * Math.sin(angle);
-		}
-		else if (dispY >= 0) {
-			y += v* Math.sin(angle);
-		}
-		if(dispX >= 0) {
-			x += v * Math.cos(angle);
-		}
-		else if (dispX < 0) {
-			x -= v * Math.cos(angle);
-		}
+		//angle = Math.atan(Math.abs(dispY) /Math.abs(dispX));
+		angle = Math.atan2((dispY),(dispX));
+		accurateAngle = angle;			
+		vx = v * Math.cos(angle);
+		vy = v * Math.sin(angle);
+		updatePosition();
 		
 	}
 	

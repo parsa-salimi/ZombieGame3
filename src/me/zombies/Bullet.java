@@ -15,7 +15,7 @@ public class Bullet {
 	
 	//given current player position, mouse position, and net velocity
 	//initial x, initial y, net speed,  mouse position x, and y
-	Bullet(int initX, int initY,int v, int mouseX, int mouseY) {
+	Bullet(int initX, int initY,double v, int mouseX, int mouseY) {
 		x = initX;
 		y = initY;
 		int displaceX = mouseX - initX;

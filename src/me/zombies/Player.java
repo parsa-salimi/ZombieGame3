@@ -5,17 +5,19 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Player {
 	static final int v = 7;
 	int x;
 	int y;
-	int hp = 100000;
+	int hp = 100;
 	int rad = 8;
 	boolean isdead = false;
 	boolean canGoUp,canGoDown,canGoLeft,canGoRight = true;
 	double angle;
-
+	ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+	int currentWeapon = 0; //which  weapno in the arraylist you are using
 	
 	boolean U,R,D,L;
 	
@@ -23,6 +25,9 @@ public class Player {
 		System.out.println("sx=" +scnx);
 		this.x = scnx/2;
 		this.y = scny/2;
+		
+		weapons.add(new Pistol());
+		
 	}
 	
 	double getX(){

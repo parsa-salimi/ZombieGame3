@@ -246,7 +246,7 @@ public class GUI extends JFrame {
 				g.setColor(Color.PINK);
 				
 				Enemy i = birds.get(j);
-				g2.drawRect((int)i.getX(),(int)i.getY(), 13,13);
+				g2.drawRect((int)i.getX(),(int)i.getY(), 20,20);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= damage;
@@ -267,9 +267,12 @@ public class GUI extends JFrame {
 				for (int b = 0; b < bullets.size(); b++) {
 					Bullet c = bullets.get(b);
 					double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
-					if (BulletXY <= 20) {
+					if (BulletXY <= 23) {
+						i.hp -= damage;
+						bullets.remove(c);	
+					}
+					if (i.hp <= 0) {
 						birds.remove(i);
-						bullets.remove(c);
 						score += 100;
 					}
 				}
@@ -361,6 +364,12 @@ public class GUI extends JFrame {
 			}
 			else {
 				rightClick = false;
+			}
+			
+			//harwood testing
+			while(rightClick) {
+				//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+				player.weapons.get(player.currentWeapon).shoot(bullets, player, e.getX(), e.getY());
 			}
 		}
 

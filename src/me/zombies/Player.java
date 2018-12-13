@@ -17,7 +17,7 @@ public class Player {
 	boolean canGoUp,canGoDown,canGoLeft,canGoRight = true;
 	double angle;
 	ArrayList<Weapon> weapons = new ArrayList<Weapon>();
-	int currentWeapon = 0; //which  weapno in the arraylist you are using
+	int currentWeapon = 0; //which  weapon in the arraylist you are using
 	
 	boolean U,R,D,L;
 	
@@ -26,7 +26,8 @@ public class Player {
 		this.x = scnx/2;
 		this.y = scny/2;
 		
-		weapons.add(new Pistol());
+		//weapons.add(new Pistol());
+		weapons.add(new Shotgun());
 		
 	}
 	

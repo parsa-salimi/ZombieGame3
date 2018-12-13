@@ -8,6 +8,7 @@ public class Enemy {
 	int vx;
 	int vy;
 	int hp = 20;
+	int damage = 5;
 //hehe brennan was here 
 //method
 	//test

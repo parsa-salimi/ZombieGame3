@@ -176,7 +176,7 @@ public class GUI extends JFrame {
 		for (Enemy b : birds) {
 			b.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 		}
-		if (timerTick %100 == 0) {
+		if (timerTick %100 == 0 && !player.isdead) {
 			for (int i = 0; i < timerTick/100; i++) {
 				if (birds.size() >= 100){
 					System.out.println("nope");
@@ -233,6 +233,8 @@ public class GUI extends JFrame {
 		angle *= -1;
 	}
 
+	
+	
 	private class Timer1Listener  implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -253,6 +255,8 @@ public class GUI extends JFrame {
 		}
 	}
 
+	
+	
 
 	class DrawPanel extends JPanel {
 

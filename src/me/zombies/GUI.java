@@ -34,7 +34,7 @@ import javax.swing.Timer;
 
 public class GUI extends JFrame {
 
-	BufferedImage hull,turret,turretF,backG,barrier,enemy;
+	BufferedImage hull,turret,turretF,backG,barrier,enemy,enemy2;
 
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
@@ -46,6 +46,7 @@ public class GUI extends JFrame {
 	int mouseY = 0;
 	boolean rightClick = false;
 	double angle;
+	boolean turretDrawer = false;
 
 	int panSize=600; //initial value;
 	int playerAngle;
@@ -103,6 +104,7 @@ public class GUI extends JFrame {
 			backG = ImageIO.read(new File("./res/imgs/backG.png"));
 			barrier = ImageIO.read(new File("./res/imgs/barrier.png"));
 			enemy = ImageIO.read(new File("./res/imgs/enemy.png"));
+			enemy2 = ImageIO.read(new File("./res/imgs/enemy2.png"));
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
@@ -124,8 +126,7 @@ public class GUI extends JFrame {
 	}
 
 	void addEnemy() {
-		Random r = new Random();
-		birds.add(new Enemy(pan.getWidth(), pan.getHeight(),r.nextInt(6) + 1));
+		birds.add(new Enemy(pan.getWidth(), pan.getHeight(),1));
 	}
 
 	void drawHealth(Graphics2D g2, int hp) {
@@ -165,9 +166,9 @@ public class GUI extends JFrame {
 		}
 		if (rightClick) {
 			if (timerTick %7 == 0) {
+				turretDrawer = true;
 				bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
-			}
-			
+			} else turretDrawer = false;
 		}
 	}
 	
@@ -292,7 +293,10 @@ public class GUI extends JFrame {
 				Enemy i = birds.get(j);
 				g2.rotate(i.accurateAngle, i.x,i.y);
 				System.out.println("angle in RAD"+i.accurateAngle);
-				g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
+				if (i.texture == 1){
+					g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
+				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
+				
 				g2.rotate(0-i.accurateAngle, i.x, i.y);
 			}
 			
@@ -312,9 +316,9 @@ public class GUI extends JFrame {
 				g.fillRect(1000, 1000, 1000, 1000);
 				birds.clear();
 			}
-			else {
-				player.playerDraw(g2, hull,turret, angle);
-			}
+			else if (turretDrawer) {
+				player.playerDraw(g2, hull,turretF, angle);
+			} else player.playerDraw(g2, hull,turret, angle);
 		}
 
 

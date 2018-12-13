@@ -8,6 +8,7 @@ public class Enemy {
 	double vx;
 	double vy;
 	int hp = 20;
+	int texture;
 	double angle;
 	double accurateAngle;
 //hehe brennan was here 
@@ -53,9 +54,10 @@ public class Enemy {
 	}
 	
 	Enemy(int x, int y,int assignV) {
+		texture = (int) (Math.random()*2+1);
 		
 		mapSpawn(x,y);
-		this.v = assignV;
+		this.v = assignV + texture;
 	}
 	
 	Enemy(int x, int y,int vx, int vy){

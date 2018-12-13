@@ -276,9 +276,7 @@ public class GUI extends JFrame {
 			}
 			
 			
-			for (Enemy i : birds) {
-				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
-			}
+		
 			resetPlayerPosition();
 			pan.repaint();
 			for(Bullet b : bullets) {

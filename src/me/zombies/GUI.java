@@ -67,7 +67,8 @@ public class GUI extends JFrame {
 		new GUI();
 	}
 	GUI(){
-
+		
+		player = new Player(0,0);
 		birds = new ArrayList<Enemy>();
 		bullets = new ArrayList<Bullet>();
 		obstacles = new ArrayList<Rectangle>();
@@ -237,7 +238,6 @@ public class GUI extends JFrame {
 				initializeGameObjects();
 				doInit = false;
 				init = true;
-
 			}
 			/* ****************************** */
 

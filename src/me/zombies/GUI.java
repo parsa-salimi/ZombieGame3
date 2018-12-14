@@ -35,7 +35,7 @@ import javax.swing.Timer;
 
 public class GUI extends JFrame {
 
-	BufferedImage hull,turret,turretF,backG,barrier,enemy,enemy2;
+	BufferedImage hull,turret,turretF,backG,barrier,enemy,enemy2,enemy3;
 
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
@@ -46,7 +46,6 @@ public class GUI extends JFrame {
 	int mouseX = 0;
 	int mouseY = 0;
 	boolean rightClick = false;
-	boolean leftClick = false;
 	double angle;
 	
 	int panSize=600; //initial value;
@@ -111,6 +110,7 @@ public class GUI extends JFrame {
 			barrier = ImageIO.read(new File("./res/imgs/barrier.png"));
 			enemy = ImageIO.read(new File("./res/imgs/enemy.png"));
 			enemy2 = ImageIO.read(new File("./res/imgs/enemy2.png"));
+			enemy3 = ImageIO.read(new File("./res/imgs/enemy3.png"));
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
@@ -263,14 +263,10 @@ public class GUI extends JFrame {
 	void bulletActions() {
 		for(Bullet b : bullets) {
 			b.updatePosition();
-			
 		}
 		if (rightClick) {
 			if (timerTick %7 == 0) {
 				bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
-			}
-			if (leftClick) {
-				bullets.add(new Bullet(player.x, player.y, 50, mouseX, mouseY));
 			}
 			
 		}
@@ -346,9 +342,13 @@ public class GUI extends JFrame {
 				Enemy i = birds.get(j);
 				g2.rotate(i.accurateAngle, i.x,i.y);
 				System.out.println("angle in RAD"+i.accurateAngle);
-				if (i.texture == 1){
+				if (i.birdType == i.FLAMINGO){
 					g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
-				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
+				} else if (i.birdType == i.PIGEON){
+					g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
+				} else if (i.birdType == i.GOOSE){
+					g2.drawImage(enemy3,(int)i.getX(),(int)i.getY(), 52,52,null);
+				}
 				
 				g2.rotate(0-i.accurateAngle, i.x, i.y);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
@@ -471,23 +471,18 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
-			//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}
 			else {
 				rightClick = false;
 			}
-			if(e.getButton()== MouseEvent.BUTTON1) {
-				leftClick = true;
-			} else {
-				leftClick = false;
-			}
-			
-			player.weapons.get(player.currentWeapon).shoot(bullets, player, e.getX(), e.getY());
 			
 			//harwood testing
-				
+		//	while(rightClick) {
+				//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+				player.weapons.get(player.currentWeapon).shoot(bullets, player, e.getX(), e.getY());
 		//	}
 		}
 
@@ -496,9 +491,6 @@ public class GUI extends JFrame {
 		public void mouseReleased(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = false;
-			}
-			if(e.getButton() == MouseEvent.BUTTON1) {
-				leftClick = false;
 			}
 
 		}

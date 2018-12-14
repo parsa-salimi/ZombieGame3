@@ -58,7 +58,8 @@ public class GUI extends JFrame {
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	static final int T1_SPEED = 20;
-	int damage = 5;
+	
+
 	int score = 0;
 	Rectangle pRect;
 
@@ -361,6 +362,37 @@ public class GUI extends JFrame {
 				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
 				
 				g2.rotate(0-i.accurateAngle, i.x, i.y);
+				g2.drawRect((int)i.getX(),(int)i.getY(), 20,20);
+				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
+				if (positionXY <= 20) {
+					player.hp -= i.damage;
+					birds.remove(i);
+				}
+				for(Bullet b : bullets) {
+					g2.drawRect((int)b.x,(int) b.y, 3, 3);
+				}
+				if(player.hp <= 0) {
+					player.isdead = true;
+
+				}
+				for(Bullet b : bullets) {
+					g.setColor(Color.RED);
+					g2.drawRect((int)b.x,(int) b.y, 3, 3);
+				}
+
+				for (int b = 0; b < bullets.size(); b++) {
+					Bullet c = bullets.get(b);
+					double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
+					if (BulletXY <= 23) {
+						i.hp -= player.weapons.get(player.currentWeapon).damage;
+						bullets.remove(c);	
+					}
+					if (i.hp <= 0) {
+						birds.remove(i);
+						score += 100;
+					}
+				}
+				player.checkAngle();
 			}
 			
 			for(Bullet b : bullets) {
@@ -397,39 +429,42 @@ public class GUI extends JFrame {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_UP) {
+			if (e.getKeyCode()==KeyEvent.VK_W && player.canGoUp) {
 				player.U=true;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+			if (e.getKeyCode()==KeyEvent.VK_D &&player.canGoRight) {
 				player.R=true;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+			if (e.getKeyCode()==KeyEvent.VK_A && player.canGoLeft) {
 				player.L=true;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_DOWN && player.canGoDown) {
+			if (e.getKeyCode()==KeyEvent.VK_S && player.canGoDown) {
 				player.D=true;
+			}
+			if (e.getKeyCode()== KeyEvent.VK_R) {
+				player.weapons.get(player.currentWeapon).reload();
 			}
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_UP) {
+			if (e.getKeyCode()==KeyEvent.VK_W) {
 				player.U=false;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+			if (e.getKeyCode()==KeyEvent.VK_D) {
 				player.R=false;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+			if (e.getKeyCode()==KeyEvent.VK_A) {
 				player.L=false;
 			}
 			//up on
-			if (e.getKeyCode()==KeyEvent.VK_DOWN) {
+			if (e.getKeyCode()==KeyEvent.VK_S) {
 				player.D=false;
 			}
 
@@ -447,13 +482,20 @@ public class GUI extends JFrame {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-
-			//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
-
+			// TODO Auto-generated method stub
+			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
-			}		
+			}
+			else {
+				rightClick = false;
+			}
 			
+			//harwood testing
+		//	while(rightClick) {
+				//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+				player.weapons.get(player.currentWeapon).shoot(bullets, player, e.getX(), e.getY());
+		//	}
 		}
 
 

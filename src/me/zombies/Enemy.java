@@ -10,6 +10,7 @@ public class Enemy {
 	int texture;
 	double angle;
 	double accurateAngle;
+	int damage = 5;
 //hehe brennan was here 
 //method
 	//test

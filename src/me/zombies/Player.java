@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Player {
 	static final int v = 6;
@@ -17,6 +18,8 @@ public class Player {
 	double angle;
 	boolean upDown = false;
 
+	ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+	int currentWeapon = 0; //which  weapon in the arraylist you are using
 	
 	boolean U,R,D,L;
 	
@@ -24,6 +27,10 @@ public class Player {
 		System.out.println("sx=" +scnx);
 		this.x = scnx/2;
 		this.y = scny/2;
+		
+		//weapons.add(new Pistol());
+		weapons.add(new Shotgun());
+		
 	}
 	
 	double getX(){

@@ -46,6 +46,7 @@ public class GUI extends JFrame {
 	int mouseX = 0;
 	int mouseY = 0;
 	boolean rightClick = false;
+	boolean leftClick = false;
 	double angle;
 	
 	int panSize=600; //initial value;
@@ -262,10 +263,14 @@ public class GUI extends JFrame {
 	void bulletActions() {
 		for(Bullet b : bullets) {
 			b.updatePosition();
+			
 		}
 		if (rightClick) {
 			if (timerTick %7 == 0) {
 				bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
+			}
+			if (leftClick) {
+				bullets.add(new Bullet(player.x, player.y, 50, mouseX, mouseY));
 			}
 			
 		}
@@ -466,18 +471,23 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
-			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+			//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}
 			else {
 				rightClick = false;
 			}
+			if(e.getButton()== MouseEvent.BUTTON1) {
+				leftClick = true;
+			} else {
+				leftClick = false;
+			}
+			
+			player.weapons.get(player.currentWeapon).shoot(bullets, player, e.getX(), e.getY());
 			
 			//harwood testing
-		//	while(rightClick) {
-				//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
-				player.weapons.get(player.currentWeapon).shoot(bullets, player, e.getX(), e.getY());
+				
 		//	}
 		}
 
@@ -486,6 +496,9 @@ public class GUI extends JFrame {
 		public void mouseReleased(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = false;
+			}
+			if(e.getButton() == MouseEvent.BUTTON1) {
+				leftClick = false;
 			}
 
 		}

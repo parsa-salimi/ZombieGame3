@@ -116,6 +116,12 @@ public class GUI extends JFrame {
 		}
 		//player
 		player = new Player(pan.getWidth(),pan.getHeight());
+		for(int i = 0; i < 10; i++) {
+			int width = pan.getWidth();
+			int height = pan.getHeight();
+			obstacles.add(new Rectangle(r.nextInt(width), r.nextInt(height), r.nextInt(width/10)
+					,r.nextInt(height/10)));
+		}
 		hpMax = player.hp;
 		//enemies
 		birds = new ArrayList<Enemy>();
@@ -212,7 +218,7 @@ public class GUI extends JFrame {
 			Enemy i = birds.get(j);
 			double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 			if (positionXY <= 20) {
-				player.hp -= damage;
+				player.hp -= i.damage;
 				birds.remove(i);
 			}
 			if(player.hp <= 0) {
@@ -274,32 +280,7 @@ public class GUI extends JFrame {
 				return;
 			}
 			
-			if(player.upDown) {
-				pRect = new Rectangle(player.x -7, player.y -25, 33, 64);
-			}
-			else {
-				pRect = new Rectangle(player.x-25, player.y-10, 64, 33);
-			}
-			for(Rectangle o : obstacles) {
-				if(o.intersects(pRect)) {
-					if(o.getX() > pRect.getX()) {
-						player.R = false;
-						player.canGoRight = false;
-					}
-					if(o.getX() < pRect.getX() ) {
-						player.L = false;
-						player.canGoLeft = false;
-					}
-					if(o.getY()  < player.getY() +64) {
-						player.D = false;
-						player.canGoDown = false;
-					}
-					if(o.getY() + o.getHeight() < player.getY()) {
-						player.U = false;
-						player.canGoUp = false;
-					}
-				}
-			}
+
 			for (Enemy i : birds) {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}
@@ -331,7 +312,7 @@ public class GUI extends JFrame {
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g); //clear screen and repaint using background colour
-
+			
 			/* The following code is designed to initialize data once, but only after the screen is displayed */
 			if (pan.getWidth() < 50) { //screen width is ridiculously small: .: not actually displayed yet
 				return;
@@ -351,6 +332,9 @@ public class GUI extends JFrame {
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
+			for(Rectangle o : obstacles) {
+				g2.fillRect((int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight());
+			}
 
 			for(int j = 0; j < birds.size() ; j++) {
 				g.setColor(Color.PINK);
@@ -362,7 +346,6 @@ public class GUI extends JFrame {
 				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
 				
 				g2.rotate(0-i.accurateAngle, i.x, i.y);
-				g2.drawRect((int)i.getX(),(int)i.getY(), 20,20);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= i.damage;

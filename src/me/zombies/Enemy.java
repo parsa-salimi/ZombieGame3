@@ -60,20 +60,24 @@ public class Enemy {
 	Enemy(int x, int y,int assignV) {
 		int type = (int) (Math.random()*100+1);
 		
+		System.out.println("The bird type is: " + type + " meaning it is number");
 		if (type <= 60) {
 			birdType = FLAMINGO;
 			this.v = assignV+1;
 			this.hp = 20;
+			System.out.println(FLAMINGO);
 		}
 		if (type > 60 && type <= 90) {
 			birdType = PIGEON;
 			this.v = assignV+2;
 			this.hp = 10;
+			System.out.println(PIGEON);
 		}
 		if (type > 90) {
 			birdType = GOOSE;
 			this.hp = 100;
 			this.v = assignV;
+			System.out.println(GOOSE);
 		}
 		
 		

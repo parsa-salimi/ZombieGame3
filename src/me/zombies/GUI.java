@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
@@ -39,7 +40,7 @@ public class GUI extends JFrame {
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
 	ArrayList<Bullet> bullets;
-	ArrayList<Obstacle> obstacles;
+	ArrayList<Rectangle> obstacles;
 	Player player;
 
 	int mouseX = 0;
@@ -49,6 +50,7 @@ public class GUI extends JFrame {
 	
 	int panSize=600; //initial value;
 	int playerAngle;
+	boolean turretDrawer = false;
 
 	boolean init = false;
 	int timerTick = 0;
@@ -58,6 +60,7 @@ public class GUI extends JFrame {
 	static final int T1_SPEED = 20;
 	int damage = 5;
 	int score = 0;
+	Rectangle pRect;
 
 
 	public static void main(String[] args) {
@@ -300,20 +303,17 @@ public class GUI extends JFrame {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 			}
 			resetPlayerPosition();
-			
-			pan.repaint();
-
-			}
 			playerActions();
 			enemyActions();			
 			bulletActions();
-			
 			gameStuff();
-			resetPlayerPosition();
 			pan.repaint();
 
+			}
+
+			
+
 		}
-	}
 
 	
 	

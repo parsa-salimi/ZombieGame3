@@ -15,6 +15,7 @@ public class Player {
 	boolean isdead = false;
 	boolean canGoUp,canGoDown,canGoLeft,canGoRight = true;
 	double angle;
+	boolean upDown = false;
 
 	
 	boolean U,R,D,L;

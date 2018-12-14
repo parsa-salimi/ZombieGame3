@@ -3,7 +3,7 @@ import java.lang.*;
 
 public class Bullet {
 	//velocity
-	double v = 10;
+	double v = 1;
 	double vx;
 	double vy;
 	double x;

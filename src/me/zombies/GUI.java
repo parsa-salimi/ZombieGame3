@@ -120,8 +120,8 @@ public class GUI extends JFrame {
 		for(int i = 0; i < 10; i++) {
 			int width = pan.getWidth();
 			int height = pan.getHeight();
-			obstacles.add(new Rectangle(r.nextInt(width), r.nextInt(height), r.nextInt(width/10)
-					,r.nextInt(height/10)));
+			obstacles.add(new Rectangle(r.nextInt(width), r.nextInt(height-50)+50, r.nextInt(width/12) + 30
+					,r.nextInt(height/12) + 30));
 		}
 		hpMax = player.hp;
 		//enemies
@@ -186,11 +186,13 @@ public class GUI extends JFrame {
 					player.L = false;
 					player.canGoLeft = false;
 				}
-				if(o.getY()  < player.getY() +64) {
+				if(o.getY()  < player.getY() +64 && o.getX() < player.getX() + 15 && o.getX() + o.getWidth() > player.getX() + 15
+						&& o.getY() + o.getHeight() > player.getY()) {
 					player.D = false;
 					player.canGoDown = false;
 				}
-				if(o.getY() + o.getHeight() < player.getY()) {
+				if(o.getY() + o.getHeight() < player.getY() && o.getX() < player.getX() + 15 && o.getX() + o.getWidth()> player.getX() + 15
+						) {
 					player.U = false;
 					player.canGoUp = false;
 				}
@@ -230,7 +232,6 @@ public class GUI extends JFrame {
 				double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
 				if (BulletXY <= 20) {
 					birds.remove(i);
-					score += 100;
 
 				}
 			}

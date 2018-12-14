@@ -231,7 +231,6 @@ public class GUI extends JFrame {
 				double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
 				if (BulletXY <= 20) {
 					birds.remove(i);
-					score += 100;
 
 				}
 			}

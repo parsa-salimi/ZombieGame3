@@ -54,7 +54,7 @@ public class GUI extends JFrame {
 	boolean turretDrawer = false;
 
 	boolean init = false;
-	int timerTick = 0;
+	long  timerTick = 0;
 	int hpMax;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -207,7 +207,6 @@ public class GUI extends JFrame {
 		if (timerTick %100 == 0) {
 			for (int i = 0; i < timerTick/100; i++) {
 				if (birds.size() >= 100){
-					System.out.println("nope");
 				} else {
 					addEnemy();
 				}	
@@ -237,6 +236,8 @@ public class GUI extends JFrame {
 			}
 			player.checkAngle();
 			updateTurretAngle();
+			score++;
+			System.out.println(timerTick/10);
 		}
 	}
 	
@@ -346,7 +347,7 @@ public class GUI extends JFrame {
 				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
 				g2.rotate(i.accurateAngle, i.x,i.y);
-				System.out.println("angle in RAD"+i.accurateAngle);
+			
 				if (i.texture == 1){
 					g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
 				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
@@ -395,7 +396,7 @@ public class GUI extends JFrame {
 			
 			drawHealth(g2, player.hp);
 			if(player.isdead) {
-				System.out.println("GAME OVER");
+				
 				g.setColor(Color.BLACK);
 				g.fillRect(1000, 1000, 1000, 1000);
 				birds.clear();

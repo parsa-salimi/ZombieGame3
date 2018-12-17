@@ -66,21 +66,21 @@ public class Enemy {
 			birdType = FLAMINGO;
 			this.v = assignV+1;
 			this.hp = 20;
-			System.out.println(FLAMINGO);
+			System.out.println("FLAMINGO");
 		}
 		if (type > 60 && type <= 90) {
 			this.damage = 5;
 			birdType = PIGEON;
 			this.v = assignV+2;
 			this.hp = 10;
-			System.out.println(PIGEON);
+			System.out.println("PIGEON");
 		}
 		if (type > 90) {
 			this.damage = 75;
 			birdType = GOOSE;
 			this.hp = 100;
 			this.v = assignV;
-			System.out.println(GOOSE);
+			System.out.println("GOOSE");
 		}
 		
 		

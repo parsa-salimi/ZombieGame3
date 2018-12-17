@@ -220,7 +220,7 @@ public class GUI extends JFrame {
 				player.hp -= i.damage;
 				birds.remove(i);
 			}
-			if (positionXY <= 15 && i.birdType == i.PIGEON) {
+			if (positionXY <= 20 && i.birdType == i.PIGEON) {
 				player.hp -= i.damage;
 				birds.remove(i);
 			}
@@ -285,10 +285,11 @@ public class GUI extends JFrame {
 		}
 		if (rightClick) {
 			if (timerTick %7 == 0) {
+				turretDrawer = true;
 				bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
-			}
+			} else turretDrawer = false;
 			
-		}
+		} 
 	}
 
 
@@ -353,7 +354,6 @@ public class GUI extends JFrame {
 				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
 				g2.rotate(i.accurateAngle, i.x,i.y);
-				System.out.println("angle in RAD"+i.accurateAngle);
 				if (i.birdType == i.FLAMINGO){
 					g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
 				} else if (i.birdType == i.PIGEON){

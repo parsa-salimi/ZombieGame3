@@ -48,6 +48,7 @@ public class GUI extends JFrame {
 	boolean rightClick = false;
 	boolean leftClick = false;
 	double angle;
+	int width, height;
 	
 	int panSize=600; //initial value;
 	int playerAngle;
@@ -118,8 +119,8 @@ public class GUI extends JFrame {
 		//player
 		player = new Player(pan.getWidth(),pan.getHeight());
 		for(int i = 0; i < 10; i++) {
-			int width = pan.getWidth();
-			int height = pan.getHeight();
+			width = pan.getWidth();
+			height = pan.getHeight();
 			obstacles.add(new Rectangle(r.nextInt(width), r.nextInt(height-50)+50, r.nextInt(width/12) + 30
 					,r.nextInt(height/12) + 30));
 		}
@@ -236,8 +237,7 @@ public class GUI extends JFrame {
 			}
 			player.checkAngle();
 			updateTurretAngle();
-			score++;
-			System.out.println(timerTick/10);
+			
 		}
 	}
 	
@@ -340,7 +340,7 @@ public class GUI extends JFrame {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
 			for(Rectangle o : obstacles) {
-				g2.fillRect((int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight());
+				g2.fillRect((int)o.getX(),(int)o.getY(),(int) o.getWidth()-10,(int)o.getHeight());
 			}
 
 			for(int j = 0; j < birds.size() ; j++) {
@@ -379,7 +379,6 @@ public class GUI extends JFrame {
 					}
 					if (i.hp <= 0) {
 						birds.remove(i);
-						score += 100;
 					}
 				}
 				player.checkAngle();
@@ -393,12 +392,19 @@ public class GUI extends JFrame {
 			}
 			
 			
+			g2.drawString(String.valueOf(timerTick/10), 50, 40);
 			
 			drawHealth(g2, player.hp);
 			if(player.isdead) {
 				
 				g.setColor(Color.BLACK);
-				g.fillRect(1000, 1000, 1000, 1000);
+				/*for(int i = 0; i < width; i +=10) {
+					for(int j = 0; j < height; i+=5) {
+						g.drawString("GAME OVER",i,j);
+					}
+				}*/
+				
+				timerTick = 0;
 				birds.clear();
 			}
 			else if (turretDrawer) {
@@ -486,7 +492,6 @@ public class GUI extends JFrame {
 				leftClick = false;
 			}
 			
-			player.weapons.get(player.currentWeapon).shoot(bullets, player, e.getX(), e.getY());
 			
 			//harwood testing
 				

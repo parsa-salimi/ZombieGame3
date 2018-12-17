@@ -1,6 +1,7 @@
 package me.zombies;
 import java.util.ArrayList;
 
+
 public class Weapon {
 	static final int INFINITE = -99;
 	int maxammo = 5;

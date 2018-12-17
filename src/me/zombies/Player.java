@@ -28,8 +28,8 @@ public class Player {
 		this.x = scnx/2;
 		this.y = scny/2;
 		
-		//weapons.add(new Pistol());
-		weapons.add(new Shotgun());
+		weapons.add(new Pistol());
+		weapons.add(new Sniper());
 		
 	}
 	

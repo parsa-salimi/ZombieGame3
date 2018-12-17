@@ -10,7 +10,7 @@ public class Enemy {
 	int birdType;
 	double angle;
 	double accurateAngle;
-	int damage = 5;
+	int damage;
 	
 	final int FLAMINGO = 0;
 	final int PIGEON = 1;
@@ -62,18 +62,21 @@ public class Enemy {
 		
 		System.out.println("The bird type is: " + type + " meaning it is number");
 		if (type <= 60) {
+			this.damage = 10;
 			birdType = FLAMINGO;
 			this.v = assignV+1;
 			this.hp = 20;
 			System.out.println(FLAMINGO);
 		}
 		if (type > 60 && type <= 90) {
+			this.damage = 5;
 			birdType = PIGEON;
 			this.v = assignV+2;
 			this.hp = 10;
 			System.out.println(PIGEON);
 		}
 		if (type > 90) {
+			this.damage = 75;
 			birdType = GOOSE;
 			this.hp = 100;
 			this.v = assignV;

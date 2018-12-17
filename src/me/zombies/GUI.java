@@ -1,7 +1,5 @@
 
 package me.zombies;
-
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -218,7 +216,15 @@ public class GUI extends JFrame {
 		for(int j = 0; j < birds.size() ; j++) {
 			Enemy i = birds.get(j);
 			double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
-			if (positionXY <= 20) {
+			if (positionXY <= 20 && i.birdType == i.FLAMINGO) {
+				player.hp -= i.damage;
+				birds.remove(i);
+			}
+			if (positionXY <= 15 && i.birdType == i.PIGEON) {
+				player.hp -= i.damage;
+				birds.remove(i);
+			}
+			if (positionXY <= 60 && i.birdType == i.GOOSE) {
 				player.hp -= i.damage;
 				birds.remove(i);
 			}
@@ -306,14 +312,7 @@ public class GUI extends JFrame {
 			pan.repaint();
 
 			}
-
-			
-
 		}
-
-	
-	
-
 	class DrawPanel extends JPanel {
 
 		DrawPanel() {	
@@ -347,7 +346,7 @@ public class GUI extends JFrame {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
 			for(Rectangle o : obstacles) {
-				g2.fillRect((int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight());
+				g2.drawImage(barrier, (int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight(),null);
 			}
 
 			for(int j = 0; j < birds.size() ; j++) {

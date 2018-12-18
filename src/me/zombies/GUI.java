@@ -234,8 +234,13 @@ public class GUI extends JFrame {
 				Bullet c = bullets.get(b);
 				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
 				if (BulletXY <= 23) {
+					if(player.currentWeapon == 0) {
 					i.hp -= player.weapons.get(player.currentWeapon).damage;
-					bullets.remove(c);	
+					bullets.remove(c);
+					}
+					else if(player.currentWeapon == 1) {
+						i.hp -= player.weapons.get(player.currentWeapon).damage;
+					}
 				}
 			}
 
@@ -407,17 +412,12 @@ public class GUI extends JFrame {
 			
 			
 			g2.drawString(String.valueOf(timerTick/10), 50, 40);
-			
-
-			for(Bullet b : bullets) {
-				g.setColor(Color.RED);
-				g2.fillOval((int)b.x,(int) b.y, 3, 3);
-
-			}
-
-
-
 			drawHealth(g2, player.hp);
+
+
+
+
+			
 			if(player.isdead) {
 				
 				g.setColor(Color.BLACK);
@@ -433,7 +433,21 @@ public class GUI extends JFrame {
 			else if (turretDrawer) {
 				player.playerDraw(g2, hull,turretF, angle);
 			} else player.playerDraw(g2, hull,turret, angle);
+			
+			for(Bullet b : bullets) {
+				g.setColor(Color.RED);
+				if(player.currentWeapon == 0) {
+				g2.fillOval((int)b.x,(int) b.y, 3, 3);
+				}
+				if(player.currentWeapon == 1) {
+					g2.fillRect((int)b.x,(int) b.y, 500,2);
+					g2.rotate(angle, player.x+7, player.y+7);
+					}
+				
+
+			}
 		}
+
 
 
 	}

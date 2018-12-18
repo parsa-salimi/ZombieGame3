@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class Weapon {
 	static final int INFINITE = -99;
-	int maxammo = 5;
-	int damage = 5;
+	int maxammo;
+	int damage;
 	int ammo;
 	int magazine;
-	int rate = 400; // how many ms between shots
-	double bulletspeed = 1.0;
+	int rate; // how many ms between shots
+	double bulletspeed;
 	long lastshot;
 
 	void shoot(ArrayList<Bullet> blist, Player player, int mx, int my) {

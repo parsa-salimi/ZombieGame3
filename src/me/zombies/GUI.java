@@ -55,7 +55,7 @@ public class GUI extends JFrame {
 	boolean turretDrawer = false;
 
 	boolean init = false;
-	
+
 	int timerTick = 0;
 	int hpMax;
 	//for key binding
@@ -237,7 +237,7 @@ public class GUI extends JFrame {
 					bullets.remove(c);	
 				}
 			}
-			
+
 			for (int b = 0; b < bullets2.size(); b++) {
 				Bullet c = bullets2.get(b);
 				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
@@ -246,16 +246,17 @@ public class GUI extends JFrame {
 					bullets2.remove(c);	
 				}
 			}
-				
+
 			if (i.hp <= 0) {
 				birds.remove(i);
 				score += 100;
 			}
 			if(leftClick) {
-			player.weapons.get(player.currentWeapon).shoot(bullets, player, mouseX, mouseY);
+				player.weapons.get(player.currentWeapon).shoot(bullets, player, mouseX, mouseY);
+
 			}
 		}
-		
+
 		player.checkAngle();
 		updateTurretAngle();
 	}
@@ -290,7 +291,7 @@ public class GUI extends JFrame {
 			b.updatePosition();
 		}
 		if (rightClick) {
-			if (timerTick %7 == 0) {
+			if (timerTick %5 == 0) {
 				bullets2.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
 			}
 		}
@@ -390,11 +391,11 @@ public class GUI extends JFrame {
 				g.setColor(Color.WHITE);
 				g2.drawOval((int)b.x,(int) b.y, 3, 3);
 			}
-			
+
 			for(Bullet b : bullets) {
 				g.setColor(Color.RED);
 				g2.fillOval((int)b.x,(int) b.y, 3, 3);
-				
+
 			}
 
 
@@ -495,7 +496,7 @@ public class GUI extends JFrame {
 				leftClick = true;
 			} else {
 				leftClick = false;
-			
+
 			}
 
 		}

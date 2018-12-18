@@ -9,7 +9,7 @@ class Sniper extends Weapon{
 		this.damage = 20;
 		this.maxammo = 15;
 		this.rate = 300;
-		this.bulletspeed = 100.0;
+		this.bulletspeed = 30.0;
 	}
 
 

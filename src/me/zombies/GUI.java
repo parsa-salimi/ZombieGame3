@@ -233,6 +233,7 @@ public class GUI extends JFrame {
 
 			}	
 			for (int b = 0; b < bullets.size(); b++) {
+				
 				Bullet c = bullets.get(b);
 				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
 				if (BulletXY <= 23 && i.birdType == i.FLAMINGO) {
@@ -280,8 +281,18 @@ public class GUI extends JFrame {
 	}
 	
 	void bulletActions() {
+		for (int i = 0; i < bullets.size(); i++) {
+			Bullet b = bullets.get(i);
+			if(b.life > 10) {
+				bullets.remove(b);
+				i--;
+			}
+		}
+		
 		for(Bullet b : bullets) {
 			b.updatePosition();
+			
+
 		}
 		if (rightClick) {
 			if (timerTick %7 == 0) {

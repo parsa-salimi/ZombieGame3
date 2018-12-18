@@ -187,12 +187,12 @@ public class GUI extends JFrame {
 					player.L = false;
 					player.canGoLeft = false;
 				}
-				if(o.getY()  < player.getY() +64 && o.getX() < player.getX() + 15 && o.getX() + o.getWidth() > player.getX() + 15
+				if(o.getY()  < player.getY() +64 && o.getX() < player.getX() + 15 && o.getX() + o.getWidth() > player.getX()
 						&& o.getY() + o.getHeight() > player.getY()) {
 					player.D = false;
 					player.canGoDown = false;
 				}
-				if(o.getY() + o.getHeight() < player.getY() && o.getX() < player.getX() + 15 && o.getX() + o.getWidth()> player.getX() + 15
+				if(o.getY() + o.getHeight() < player.getY() && o.getX() < player.getX() + 15 && o.getX() + o.getWidth()> player.getX()
 						) {
 					player.U = false;
 					player.canGoUp = false;
@@ -340,7 +340,7 @@ public class GUI extends JFrame {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
 			for(Rectangle o : obstacles) {
-				g2.fillRect((int)o.getX(),(int)o.getY(),(int) o.getWidth()-10,(int)o.getHeight());
+				g2.fillRect((int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight());
 			}
 
 			for(int j = 0; j < birds.size() ; j++) {

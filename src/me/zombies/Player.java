@@ -11,7 +11,7 @@ public class Player {
 	static final int v = 6;
 	int x;
 	int y;
-	int hp = 50;
+	int hp = 500;
 	int rad = 8;
 	boolean isdead = false;
 	boolean canGoUp,canGoDown,canGoLeft,canGoRight = true;

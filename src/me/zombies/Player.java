@@ -19,7 +19,7 @@ public class Player {
 	boolean upDown = false;
 
 	ArrayList<Weapon> weapons = new ArrayList<Weapon>();
-	int currentWeapon = 0; //which  weapon in the arraylist you are using
+	int currentWeapon; //which  weapon in the arraylist you are using
 	
 	boolean U,R,D,L;
 	
@@ -28,8 +28,8 @@ public class Player {
 		this.x = scnx/2;
 		this.y = scny/2;
 		
-		//weapons.add(new Pistol());
-		weapons.add(new Shotgun());
+		weapons.add(new Pistol());
+		weapons.add(new Sniper());
 		
 	}
 	

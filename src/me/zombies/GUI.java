@@ -40,6 +40,7 @@ public class GUI extends JFrame {
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
 	ArrayList<Bullet> bullets;
+	ArrayList<Bullet> bullets2;
 	ArrayList<Rectangle> obstacles;
 	Player player;
 
@@ -60,7 +61,7 @@ public class GUI extends JFrame {
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	static final int T1_SPEED = 20;
-	
+
 
 	int score = 0;
 	Rectangle pRect;
@@ -70,12 +71,13 @@ public class GUI extends JFrame {
 		new GUI();
 	}
 	GUI(){
-		
+
 		player = new Player(0,0);
 		birds = new ArrayList<Enemy>();
 		bullets = new ArrayList<Bullet>();
+		bullets2 = new ArrayList<Bullet>();
 		obstacles = new ArrayList<Rectangle>();
-		
+
 		//create 5 enemies
 		Random r = new Random();
 		for(int i = 0; i < 2; i++) {
@@ -167,7 +169,7 @@ public class GUI extends JFrame {
 			player.y = 0;
 		}
 	}
-	
+
 	void playerActions() {
 		player.movePlayer();
 		player.canGoDown = player.canGoLeft = player.canGoUp = player.canGoRight = true;
@@ -200,7 +202,7 @@ public class GUI extends JFrame {
 			}
 		}
 	}
-	
+
 	void enemyActions() {
 		for (Enemy b : birds) {
 			b.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
@@ -215,7 +217,7 @@ public class GUI extends JFrame {
 		}
 		timerTick++;
 	}
-	
+
 	void gameStuff() {
 		for(int j = 0; j < birds.size() ; j++) {
 			Enemy i = birds.get(j);
@@ -228,19 +230,39 @@ public class GUI extends JFrame {
 				player.isdead = true;
 
 			}
-			for (Bullet b : bullets ) {
-				double BulletXY = Math.sqrt(Math.pow((b.getX() - i.getX()), 2)+ (Math.pow(b.getY() - i.getY(), 2)));
-				if (BulletXY <= 20) {
-					birds.remove(i);
-
+			for (int b = 0; b < bullets.size(); b++) {
+				Bullet c = bullets.get(b);
+				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
+				if (BulletXY <= 23) {
+					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					bullets.remove(c);	
 				}
 			}
-			player.checkAngle();
-			updateTurretAngle();
-			
+
+			for (int b = 0; b < bullets2.size(); b++) {
+				Bullet c = bullets2.get(b);
+				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
+				if (BulletXY <= 23) {
+					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					bullets2.remove(c);	
+				}
+			}
+
+			if (i.hp <= 0) {
+				birds.remove(i);
+				score += 100;
+			}
+			if(leftClick) {
+				player.weapons.get(player.currentWeapon).shoot(bullets, player, mouseX, mouseY);
+
+			}
 		}
+
+		player.checkAngle();
+		updateTurretAngle();
 	}
-	
+
+
 	void updateTurretAngle() {
 		int dispX = mouseX - player.x;
 		int dispY = -(mouseY - player.y);
@@ -259,22 +281,20 @@ public class GUI extends JFrame {
 			}
 		}
 		angle *= -1;
-		
+
 	}
-	
+
 	void bulletActions() {
+		for(Bullet b : bullets2) {
+			b.updatePosition();
+		}
 		for(Bullet b : bullets) {
 			b.updatePosition();
-			
 		}
 		if (rightClick) {
-			if (timerTick %7 == 0) {
-				bullets.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
+			if (timerTick %5 == 0) {
+				bullets2.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
 			}
-			if (leftClick) {
-				bullets.add(new Bullet(player.x, player.y, 50, mouseX, mouseY));
-			}
-			
 		}
 	}
 
@@ -286,7 +306,7 @@ public class GUI extends JFrame {
 			if (!init) {
 				return;
 			}
-			
+
 
 			for (Enemy i : birds) {
 				i.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
@@ -298,14 +318,14 @@ public class GUI extends JFrame {
 			gameStuff();
 			pan.repaint();
 
-			}
-
-			
-
 		}
 
-	
-	
+
+
+	}
+
+
+
 
 	class DrawPanel extends JPanel {
 
@@ -319,7 +339,7 @@ public class GUI extends JFrame {
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g); //clear screen and repaint using background colour
-			
+
 			/* The following code is designed to initialize data once, but only after the screen is displayed */
 			if (pan.getWidth() < 50) { //screen width is ridiculously small: .: not actually displayed yet
 				return;
@@ -351,23 +371,16 @@ public class GUI extends JFrame {
 				if (i.texture == 1){
 					g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
 				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
-				
+
 				g2.rotate(0-i.accurateAngle, i.x, i.y);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
 					player.hp -= i.damage;
 					birds.remove(i);
 				}
-				for(Bullet b : bullets) {
-					g2.drawRect((int)b.x,(int) b.y, 3, 3);
-				}
 				if(player.hp <= 0) {
 					player.isdead = true;
 
-				}
-				for(Bullet b : bullets) {
-					g.setColor(Color.RED);
-					g2.drawRect((int)b.x,(int) b.y, 3, 3);
 				}
 
 				for (int b = 0; b < bullets.size(); b++) {
@@ -379,12 +392,13 @@ public class GUI extends JFrame {
 					}
 					if (i.hp <= 0) {
 						birds.remove(i);
+						score += 100;
 					}
 				}
 				player.checkAngle();
 			}
-			
-			for(Bullet b : bullets) {
+
+			for(Bullet b : bullets2) {
 				g.setColor(Color.GREEN);
 				g2.fillOval((int)b.x,(int) b.y, 3, 3);
 				g.setColor(Color.WHITE);
@@ -394,6 +408,15 @@ public class GUI extends JFrame {
 			
 			g2.drawString(String.valueOf(timerTick/10), 50, 40);
 			
+
+			for(Bullet b : bullets) {
+				g.setColor(Color.RED);
+				g2.fillOval((int)b.x,(int) b.y, 3, 3);
+
+			}
+
+
+
 			drawHealth(g2, player.hp);
 			if(player.isdead) {
 				
@@ -443,6 +466,12 @@ public class GUI extends JFrame {
 			if (e.getKeyCode()== KeyEvent.VK_R) {
 				player.weapons.get(player.currentWeapon).reload();
 			}
+			if (e.getKeyCode()== KeyEvent.VK_1) {
+				player.currentWeapon = 0;
+			}
+			if (e.getKeyCode()== KeyEvent.VK_2) {
+				player.currentWeapon = 1;
+			}
 		}
 
 		@Override
@@ -490,12 +519,9 @@ public class GUI extends JFrame {
 				leftClick = true;
 			} else {
 				leftClick = false;
+
 			}
-			
-			
-			//harwood testing
-				
-		//	}
+
 		}
 
 
@@ -529,21 +555,21 @@ public class GUI extends JFrame {
 		public void mouseDragged(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			
+
 		}
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			
+
 		}
 
 
 	}
 
-
-
-
-
 }
+
+
+
+

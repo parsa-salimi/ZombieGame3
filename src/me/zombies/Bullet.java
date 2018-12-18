@@ -29,6 +29,9 @@ public class Bullet {
 			this.vy *= -1;
 
 		}
+		
+
+		
 
 		if(displaceX < 0) {
 			this.vx *= -1;

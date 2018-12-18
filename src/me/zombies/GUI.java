@@ -49,14 +49,14 @@ public class GUI extends JFrame {
 	boolean rightClick = false;
 	boolean leftClick = false;
 	double angle;
-
+	int width, height;
+	
 	int panSize=600; //initial value;
 	int playerAngle;
 	boolean turretDrawer = false;
 
 	boolean init = false;
-
-	int timerTick = 0;
+	long  timerTick = 0;
 	int hpMax;
 	//for key binding
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -121,10 +121,10 @@ public class GUI extends JFrame {
 		//player
 		player = new Player(pan.getWidth(),pan.getHeight());
 		for(int i = 0; i < 10; i++) {
-			int width = pan.getWidth();
-			int height = pan.getHeight();
-			obstacles.add(new Rectangle(r.nextInt(width), r.nextInt(height), r.nextInt(width/10)
-					,r.nextInt(height/10)));
+			width = pan.getWidth();
+			height = pan.getHeight();
+			obstacles.add(new Rectangle(r.nextInt(width), r.nextInt(height-50)+50, r.nextInt(width/12) + 30
+					,r.nextInt(height/12) + 30));
 		}
 		hpMax = player.hp;
 		//enemies
@@ -189,11 +189,13 @@ public class GUI extends JFrame {
 					player.L = false;
 					player.canGoLeft = false;
 				}
-				if(o.getY()  < player.getY() +64) {
+				if(o.getY()  < player.getY() +64 && o.getX() < player.getX() + 15 && o.getX() + o.getWidth() > player.getX()
+						&& o.getY() + o.getHeight() > player.getY()) {
 					player.D = false;
 					player.canGoDown = false;
 				}
-				if(o.getY() + o.getHeight() < player.getY()) {
+				if(o.getY() + o.getHeight() < player.getY() && o.getX() < player.getX() + 15 && o.getX() + o.getWidth()> player.getX()
+						) {
 					player.U = false;
 					player.canGoUp = false;
 				}
@@ -208,7 +210,6 @@ public class GUI extends JFrame {
 		if (timerTick %100 == 0) {
 			for (int i = 0; i < timerTick/100; i++) {
 				if (birds.size() >= 100){
-					System.out.println("nope");
 				} else {
 					addEnemy();
 				}	
@@ -366,7 +367,7 @@ public class GUI extends JFrame {
 				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
 				g2.rotate(i.accurateAngle, i.x,i.y);
-				System.out.println("angle in RAD"+i.accurateAngle);
+			
 				if (i.texture == 1){
 					g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
 				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
@@ -382,6 +383,18 @@ public class GUI extends JFrame {
 
 				}
 
+				for (int b = 0; b < bullets.size(); b++) {
+					Bullet c = bullets.get(b);
+					double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
+					if (BulletXY <= 23) {
+						i.hp -= player.weapons.get(player.currentWeapon).damage;
+						bullets.remove(c);	
+					}
+					if (i.hp <= 0) {
+						birds.remove(i);
+						score += 100;
+					}
+				}
 				player.checkAngle();
 			}
 
@@ -391,6 +404,10 @@ public class GUI extends JFrame {
 				g.setColor(Color.WHITE);
 				g2.drawOval((int)b.x,(int) b.y, 3, 3);
 			}
+			
+			
+			g2.drawString(String.valueOf(timerTick/10), 50, 40);
+			
 
 			for(Bullet b : bullets) {
 				g.setColor(Color.RED);
@@ -402,9 +419,15 @@ public class GUI extends JFrame {
 
 			drawHealth(g2, player.hp);
 			if(player.isdead) {
-				System.out.println("GAME OVER");
+				
 				g.setColor(Color.BLACK);
-				g.fillRect(1000, 1000, 1000, 1000);
+				/*for(int i = 0; i < width; i +=10) {
+					for(int j = 0; j < height; i+=5) {
+						g.drawString("GAME OVER",i,j);
+					}
+				}*/
+				
+				timerTick = 0;
 				birds.clear();
 			}
 			else if (turretDrawer) {

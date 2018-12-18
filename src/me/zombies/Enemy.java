@@ -61,21 +61,21 @@ public class Enemy {
 		int type = (int) (Math.random()*100+1);
 		
 		System.out.println("The bird type is: " + type + " meaning it is number");
-		if (type <= 60) {
+		if (type <= 70) {
 			this.damage = 10;
 			birdType = FLAMINGO;
 			this.v = assignV+1;
 			this.hp = 20;
 			System.out.println("FLAMINGO");
 		}
-		if (type > 60 && type <= 90) {
+		if (type > 70 && type <= 95) {
 			this.damage = 5;
 			birdType = PIGEON;
 			this.v = assignV+2;
 			this.hp = 10;
 			System.out.println("PIGEON");
 		}
-		if (type > 90) {
+		if (type > 95) {
 			this.damage = 75;
 			birdType = GOOSE;
 			this.hp = 100;

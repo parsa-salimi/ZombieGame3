@@ -216,11 +216,11 @@ public class GUI extends JFrame {
 		for(int j = 0; j < birds.size() ; j++) {
 			Enemy i = birds.get(j);
 			double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
-			if (positionXY <= 20 && i.birdType == i.FLAMINGO) {
+			if (positionXY <= 24 && i.birdType == i.FLAMINGO) {
 				player.hp -= i.damage;
 				birds.remove(i);
 			}
-			if (positionXY <= 20 && i.birdType == i.PIGEON) {
+			if (positionXY <= 24 && i.birdType == i.PIGEON) {
 				player.hp -= i.damage;
 				birds.remove(i);
 			}

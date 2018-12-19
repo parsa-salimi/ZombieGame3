@@ -45,6 +45,7 @@ public class GUI extends JFrame {
 	int mouseX = 0;
 	int mouseY = 0;
 	boolean rightClick = false;
+	boolean leftClick	= false;
 	double angle;
 	int width, height;
 	
@@ -236,22 +237,21 @@ public class GUI extends JFrame {
 				player.isdead = true;
 
 			}	
-			for (int b = 0; b < bullets.size(); b++) {
+			for (int b = 0; b < bullets2.size(); b++) {
 				
-				Bullet c = bullets.get(b);
+				Bullet c = bullets2.get(b);
 				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
+				if (BulletXY <= 23 && i.birdType == i.FLAMINGO) {
 					i.hp -= player.weapons.get(player.currentWeapon).damage;
-					bullets.remove(c);	
+					bullets2.remove(c);
 				} else if (BulletXY <= 15 && i.birdType == i.PIGEON) {
 					i.hp -= player.weapons.get(player.currentWeapon).damage;
-					bullets.remove(c);	
+					bullets2.remove(c);	
 				} else if (BulletXY <= 45 && i.birdType == i.GOOSE) {
 					i.hp -= player.weapons.get(player.currentWeapon).damage;
-					bullets.remove(c);	
+					bullets2.remove(c);	
 				}
-				if (i.hp <= 0) {
-					birds.remove(i);
-					score += 100;
+		
 			}
 			for (int b = 0; b < bullets.size(); b++) {
 				Bullet c = bullets.get(b);
@@ -271,6 +271,7 @@ public class GUI extends JFrame {
 				Bullet c = bullets2.get(b);
 				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
 				if (BulletXY <= 23) {
+					// change this to just regular damage
 					i.hp -= player.weapons.get(player.currentWeapon).damage;
 					bullets2.remove(c);	
 				}
@@ -278,13 +279,11 @@ public class GUI extends JFrame {
 
 			if (i.hp <= 0) {
 				birds.remove(i);
-				score += 100;
 			}
 			if(leftClick) {
 				player.weapons.get(player.currentWeapon).shoot(bullets, player, mouseX, mouseY);
-
 			}
-		}
+		} 
 
 		player.checkAngle();
 		updateTurretAngle();
@@ -322,6 +321,7 @@ public class GUI extends JFrame {
 		}
 		if (rightClick) {
 			if (timerTick %7 == 0) {
+				bullets2.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
 				turretDrawer = true;
 			} else turretDrawer = false;
 			
@@ -416,18 +416,6 @@ public class GUI extends JFrame {
 
 				}
 
-				for (int b = 0; b < bullets.size(); b++) {
-					Bullet c = bullets.get(b);
-					double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
-					if (BulletXY <= 23) {
-						i.hp -= player.weapons.get(player.currentWeapon).damage;
-						bullets.remove(c);	
-					}
-					if (i.hp <= 0) {
-						birds.remove(i);
-						score += 100;
-					}
-				}
 				player.checkAngle();
 			}
 
@@ -436,6 +424,16 @@ public class GUI extends JFrame {
 				g2.fillOval((int)b.x,(int) b.y, 3, 3);
 				g.setColor(Color.WHITE);
 				g2.drawOval((int)b.x,(int) b.y, 3, 3);
+			}
+			
+			for(Bullet b : bullets) {
+				g.setColor(Color.RED);
+				if(player.currentWeapon == 0) {
+				g2.fillOval((int)b.x,(int) b.y, 3, 3);
+				}
+				if(player.currentWeapon == 1) {
+					g2.fillOval((int)b.x,(int) b.y, 3, 3);
+					}
 			}
 			
 			
@@ -462,18 +460,7 @@ public class GUI extends JFrame {
 				player.playerDraw(g2, hull,turretF, angle);
 			} else player.playerDraw(g2, hull,turret, angle);
 			
-			for(Bullet b : bullets) {
-				g.setColor(Color.RED);
-				if(player.currentWeapon == 0) {
-				g2.fillOval((int)b.x,(int) b.y, 3, 3);
-				}
-				if(player.currentWeapon == 1) {
-					g2.fillRect((int)b.x,(int) b.y, 500,2);
-					g2.rotate(angle, player.x+7, player.y+7);
-					}
-				
 
-			}
 		}
 
 
@@ -550,7 +537,6 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
-			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}

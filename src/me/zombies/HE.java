@@ -1,13 +1,12 @@
 package me.zombies;
 
-class Pistol extends Weapon{
+class HE extends Weapon{
 
-	Pistol(){
+	HE(){
 		this.ammo = 5;
 		this.magazine = 5;
 		this.damage = 5;
 		this.maxammo = INFINITE;
-		this.rate = 300;
 		this.bulletspeed = 10.0;
 	}
 	

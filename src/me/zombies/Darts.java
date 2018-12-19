@@ -1,14 +1,12 @@
 package me.zombies;
 
-class Sniper extends Weapon{
+class Darts extends Weapon{
 
-
-	Sniper() {
+	Darts() {
 		this.ammo = 5;
 		this.magazine = 5;
 		this.damage = 20;
-		this.maxammo = 15;
-		this.rate = 300;
+		this.maxammo = INFINITE;
 		this.bulletspeed = 30.0;
 	}
 

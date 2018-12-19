@@ -15,16 +15,16 @@ public class Weapon {
 	void shoot(ArrayList<Bullet> blist, Player player, int mx, int my) {
 		//checks: can you shoot?
 		long now = System.currentTimeMillis();
-		if (now - lastshot < rate) return;
+		if (now - lastshot < rate) {
+			return;
+		}
 		if (ammo <= 0) return;
-
 
 		lastshot = now;
 		ammo--;
 		if (maxammo == INFINITE) ammo++; 
 		//do whatever shooting does
 		blist.add(new Bullet(player.x,player.y,bulletspeed, mx,my));
-
 	}
 
 	void reload() { //n is how many bullets you picked up

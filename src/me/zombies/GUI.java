@@ -33,7 +33,7 @@ import javax.swing.Timer;
 
 public class GUI extends JFrame {
 
-	BufferedImage hull,turret,turretF,backG,barrier,enemy,enemy2,enemy3;
+	BufferedImage hull,turret,turretF,turretC,turretFC,backG,barrier,enemy,enemy2,enemy3;
 
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
@@ -44,6 +44,7 @@ public class GUI extends JFrame {
 
 	int mouseX = 0;
 	int mouseY = 0;
+	int cannon = 0; 
 	boolean rightClick = false;
 	boolean leftClick	= false;
 	double angle;
@@ -51,7 +52,8 @@ public class GUI extends JFrame {
 	
 	int panSize=600; //initial value;
 	int playerAngle;
-	boolean turretDrawer = false;
+	boolean rightShoot = false;
+	boolean leftShoot = false;
 
 	boolean init = false;
 	long  timerTick = 0;
@@ -108,6 +110,8 @@ public class GUI extends JFrame {
 			hull = ImageIO.read(new File("./res/imgs/hull.png"));
 			turret = ImageIO.read(new File("./res/imgs/turret.png"));
 			turretF = ImageIO.read(new File("./res/imgs/turretF.png"));
+			turretC = ImageIO.read(new File("./res/imgs/turretC.png"));
+			turretFC = ImageIO.read(new File("./res/imgs/turretFC.png"));
 			backG = ImageIO.read(new File("./res/imgs/backG.png"));
 			barrier = ImageIO.read(new File("./res/imgs/barrier.png"));
 			enemy = ImageIO.read(new File("./res/imgs/enemy.png"));
@@ -206,7 +210,7 @@ public class GUI extends JFrame {
 		for (Enemy b : birds) {
 			b.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 		}
-		if (timerTick %100 == 0) {
+		if (timerTick %300 == 0) {
 			for (int i = 0; i < timerTick/100; i++) {
 				if (birds.size() >= 100){
 				} else {
@@ -215,6 +219,20 @@ public class GUI extends JFrame {
 			}
 		}
 		timerTick++;
+	}
+	
+	BufferedImage turretImage() {
+		BufferedImage img = null;
+		
+		if (rightShoot && leftShoot) {
+			img = turretFC;
+		} else if (rightShoot) {
+			img = turretF;
+		} else if (leftShoot) {
+			img = turretC;
+		} else img = turret;
+		return img;
+		
 	}
 
 	void gameStuff() {
@@ -276,15 +294,13 @@ public class GUI extends JFrame {
 					bullets2.remove(c);	
 				}
 			}
-
 			if (i.hp <= 0) {
 				birds.remove(i);
 			}
-			if(leftClick) {
-				player.weapons.get(player.currentWeapon).shoot(bullets, player, mouseX, mouseY);
-			}
 		} 
-
+		if (cannon > 0 ) {
+			cannon--;
+		}
 		player.checkAngle();
 		updateTurretAngle();
 	}
@@ -319,13 +335,17 @@ public class GUI extends JFrame {
 			b.updatePosition();
 			
 		}
-		if (rightClick) {
-			if (timerTick %7 == 0) {
-				bullets2.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
-				turretDrawer = true;
-			} else turretDrawer = false;
-			
-		} 
+		//machine gun
+		if (rightClick && timerTick %7 == 0) {
+			bullets2.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
+			rightShoot = true;
+		} else rightShoot = false;
+		
+		if(leftClick && cannon == 0) {
+			player.weapons.get(player.currentWeapon).shoot(bullets, player, mouseX, mouseY);
+			leftShoot = true;
+			cannon = 100;
+		} else leftShoot = false;
 	}
 
 
@@ -349,14 +369,8 @@ public class GUI extends JFrame {
 			pan.repaint();
 
 		}
-
-
-
 	}
-
-
-
-
+	
 	class DrawPanel extends JPanel {
 
 		DrawPanel() {	
@@ -456,9 +470,7 @@ public class GUI extends JFrame {
 				timerTick = 0;
 				birds.clear();
 			}
-			else if (turretDrawer) {
-				player.playerDraw(g2, hull,turretF, angle);
-			} else player.playerDraw(g2, hull,turret, angle);
+			player.playerDraw(g2, hull,turretImage(), angle);
 			
 
 		}
@@ -537,19 +549,19 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
+			//machine gun
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}
 			else {
 				rightClick = false;
 			}
+			//main gun
 			if(e.getButton()== MouseEvent.BUTTON1) {
 				leftClick = true;
 			} else {
 				leftClick = false;
-
 			}
-
 		}
 
 
@@ -557,6 +569,9 @@ public class GUI extends JFrame {
 		public void mouseReleased(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = false;
+			}
+			if(e.getButton() == MouseEvent.BUTTON1) {
+				leftClick = false;
 			}
 
 		}

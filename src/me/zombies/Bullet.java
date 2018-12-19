@@ -9,6 +9,7 @@ public class Bullet {
 	double x;
 	double y;
 	double angle;
+	double life;
 	
 	
 
@@ -50,6 +51,7 @@ public class Bullet {
 	void updatePosition() {
 		this.x += vx;
 		this.y += vy;
+		life++;
 		
 	}
 	

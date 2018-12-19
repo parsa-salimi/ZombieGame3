@@ -1,7 +1,5 @@
 
 package me.zombies;
-
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -35,7 +33,7 @@ import javax.swing.Timer;
 
 public class GUI extends JFrame {
 
-	BufferedImage hull,turret,turretF,backG,barrier,enemy,enemy2;
+	BufferedImage hull,turret,turretF,backG,barrier,enemy,enemy2,enemy3;
 
 	DrawPanel pan;
 	ArrayList<Enemy> birds;
@@ -47,7 +45,6 @@ public class GUI extends JFrame {
 	int mouseX = 0;
 	int mouseY = 0;
 	boolean rightClick = false;
-	boolean leftClick = false;
 	double angle;
 	int width, height;
 	
@@ -114,6 +111,7 @@ public class GUI extends JFrame {
 			barrier = ImageIO.read(new File("./res/imgs/barrier.png"));
 			enemy = ImageIO.read(new File("./res/imgs/enemy.png"));
 			enemy2 = ImageIO.read(new File("./res/imgs/enemy2.png"));
+			enemy3 = ImageIO.read(new File("./res/imgs/enemy3.png"));
 		} catch (IOException e) {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
@@ -222,13 +220,38 @@ public class GUI extends JFrame {
 		for(int j = 0; j < birds.size() ; j++) {
 			Enemy i = birds.get(j);
 			double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
-			if (positionXY <= 20) {
+			if (positionXY <= 24 && i.birdType == i.FLAMINGO) {
+				player.hp -= i.damage;
+				birds.remove(i);
+			}
+			if (positionXY <= 24 && i.birdType == i.PIGEON) {
+				player.hp -= i.damage;
+				birds.remove(i);
+			}
+			if (positionXY <= 60 && i.birdType == i.GOOSE) {
 				player.hp -= i.damage;
 				birds.remove(i);
 			}
 			if(player.hp <= 0) {
 				player.isdead = true;
 
+			}	
+			for (int b = 0; b < bullets.size(); b++) {
+				
+				Bullet c = bullets.get(b);
+				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
+					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					bullets.remove(c);	
+				} else if (BulletXY <= 15 && i.birdType == i.PIGEON) {
+					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					bullets.remove(c);	
+				} else if (BulletXY <= 45 && i.birdType == i.GOOSE) {
+					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					bullets.remove(c);	
+				}
+				if (i.hp <= 0) {
+					birds.remove(i);
+					score += 100;
 			}
 			for (int b = 0; b < bullets.size(); b++) {
 				Bullet c = bullets.get(b);
@@ -295,12 +318,14 @@ public class GUI extends JFrame {
 		}
 		for(Bullet b : bullets) {
 			b.updatePosition();
+			
 		}
 		if (rightClick) {
-			if (timerTick %5 == 0) {
-				bullets2.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
-			}
-		}
+			if (timerTick %7 == 0) {
+				turretDrawer = true;
+			} else turretDrawer = false;
+			
+		} 
 	}
 
 
@@ -365,18 +390,21 @@ public class GUI extends JFrame {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
 			for(Rectangle o : obstacles) {
-				g2.fillRect((int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight());
+				g2.drawImage(barrier, (int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight(),null);
 			}
 
 			for(int j = 0; j < birds.size() ; j++) {
 				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
 				g2.rotate(i.accurateAngle, i.x,i.y);
-			
-				if (i.texture == 1){
+				if (i.birdType == i.FLAMINGO){
 					g2.drawImage(enemy,(int)i.getX(),(int)i.getY(), 26,26,null);
-				} else g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
-
+				} else if (i.birdType == i.PIGEON){
+					g2.drawImage(enemy2,(int)i.getX(),(int)i.getY(), 26,26,null);
+				} else if (i.birdType == i.GOOSE){
+					g2.drawImage(enemy3,(int)i.getX(),(int)i.getY(), 52,52,null);
+				}
+				
 				g2.rotate(0-i.accurateAngle, i.x, i.y);
 				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 				if (positionXY <= 20) {
@@ -522,7 +550,7 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
-			//bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
+			bullets.add(new Bullet(player.x,player.y,50, e.getX(),e.getY()));
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = true;
 			}
@@ -543,9 +571,6 @@ public class GUI extends JFrame {
 		public void mouseReleased(MouseEvent e) {
 			if(e.getButton() == MouseEvent.BUTTON3) {
 				rightClick = false;
-			}
-			if(e.getButton() == MouseEvent.BUTTON1) {
-				leftClick = false;
 			}
 
 		}

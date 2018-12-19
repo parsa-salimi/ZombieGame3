@@ -6,11 +6,15 @@ public class Enemy {
 	double y;
 	double vx;
 	double vy;
-	int hp = 20;
-	int texture;
+	int hp;
+	int birdType;
 	double angle;
 	double accurateAngle;
-	int damage = 5;
+	int damage;
+	
+	final int FLAMINGO = 0;
+	final int PIGEON = 1;
+	final int GOOSE = 3;
 //hehe brennan was here 
 //method
 	//test
@@ -54,10 +58,33 @@ public class Enemy {
 	}
 	
 	Enemy(int x, int y,int assignV) {
-		texture = (int) (Math.random()*2+1);
+		int type = (int) (Math.random()*100+1);
+		
+		System.out.println("The bird type is: " + type + " meaning it is number");
+		if (type <= 70) {
+			this.damage = 10;
+			birdType = FLAMINGO;
+			this.v = assignV+1;
+			this.hp = 20;
+			System.out.println("FLAMINGO");
+		}
+		if (type > 70 && type <= 95) {
+			this.damage = 5;
+			birdType = PIGEON;
+			this.v = assignV+2;
+			this.hp = 10;
+			System.out.println("PIGEON");
+		}
+		if (type > 95) {
+			this.damage = 75;
+			birdType = GOOSE;
+			this.hp = 100;
+			this.v = assignV;
+			System.out.println("GOOSE");
+		}
+		
 		
 		mapSpawn(x,y);
-		this.v = assignV + texture;
 	}
 	
 	Enemy(int x, int y,int vx, int vy){

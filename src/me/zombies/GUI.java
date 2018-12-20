@@ -49,6 +49,7 @@ public class GUI extends JFrame {
 	boolean leftClick	= false;
 	double angle;
 	int width, height;
+	Random r;
 	
 	int panSize=600; //initial value;
 	int playerAngle;
@@ -62,8 +63,6 @@ public class GUI extends JFrame {
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 	static final int T1_SPEED = 20;
 
-
-	int score = 0;
 	Rectangle pRect;
 
 
@@ -71,19 +70,20 @@ public class GUI extends JFrame {
 		new GUI();
 	}
 	GUI(){
-
+		//initialize variables
+		r = new Random();
 		player = new Player(0,0);
 		birds = new ArrayList<Enemy>();
+		//main bullets
 		bullets = new ArrayList<Bullet>();
+		//machine gun bullets
 		bullets2 = new ArrayList<Bullet>();
 		obstacles = new ArrayList<Rectangle>();
 
-		//create 5 enemies
-		Random r = new Random();
+		//create 2 initial enemies
 		for(int i = 0; i < 2; i++) {
 			birds.add(new Enemy(i*50+1, i*40+1,r.nextInt(6) + 1));
 		}
-
 
 
 		pan = new DrawPanel();
@@ -104,8 +104,8 @@ public class GUI extends JFrame {
 	}
 
 	void initializeGameObjects() {
-		Random r = new Random();
 		panSize = pan.getWidth();
+		//load sprites
 		try {
 			hull = ImageIO.read(new File("./res/imgs/hull.png"));
 			turret = ImageIO.read(new File("./res/imgs/turret.png"));
@@ -121,8 +121,9 @@ public class GUI extends JFrame {
 			System.out.println("An image could not be loaded or is missing.");
 			System.exit(0);
 		}
-		//player
 		player = new Player(pan.getWidth(),pan.getHeight());
+		
+		//add 10 obstacles
 		for(int i = 0; i < 10; i++) {
 			width = pan.getWidth();
 			height = pan.getHeight();
@@ -130,17 +131,9 @@ public class GUI extends JFrame {
 					,r.nextInt(height/12) + 30));
 		}
 		hpMax = player.hp;
-		//enemies
-		birds = new ArrayList<Enemy>();
+		addEnemy();
+		
 
-		for(int i = 0; i < 1; i++) {
-			addEnemy();
-		}
-
-		for(int i = 0; i < 10; i++) {
-			int upleftx = r.nextInt(pan.getWidth()-40);
-			int uplefty = r.nextInt(pan.getHeight()-40);
-		}
 	}
 
 	void addEnemy() {
@@ -158,6 +151,7 @@ public class GUI extends JFrame {
 
 	}
 
+	//so that the player won't go over the edge of the screen
 	void resetPlayerPosition() {
 		if (player.getX() > pan.getWidth()-(player.rad*2)) {
 			player.x = pan.getWidth()-(player.rad*2);
@@ -175,28 +169,35 @@ public class GUI extends JFrame {
 
 	void playerActions() {
 		player.movePlayer();
+		//collision
 		player.canGoDown = player.canGoLeft = player.canGoUp = player.canGoRight = true;
+		//if the player is either going up or down(so that it's a vertical rectangle facing up)
 		if(player.upDown) {
 			pRect = new Rectangle(player.x -7, player.y -25, 33, 64);
 		}
 		else {
 			pRect = new Rectangle(player.x-25, player.y-10, 64, 33);
 		}
+		//for all obstacles, check collision
 		for(Rectangle o : obstacles) {
 			if(o.intersects(pRect)) {
+				//if it collides with left side
 				if(o.getX() > pRect.getX()) {
 					player.R = false;
 					player.canGoRight = false;
 				}
+				//if it collides with right side
 				if(o.getX() < pRect.getX() ) {
 					player.L = false;
 					player.canGoLeft = false;
 				}
+				//if it collides with up side
 				if(o.getY()  < player.getY() +64 && o.getX() < player.getX() + 15 && o.getX() + o.getWidth() > player.getX()
 						&& o.getY() + o.getHeight() > player.getY()) {
 					player.D = false;
 					player.canGoDown = false;
 				}
+				//if it collides with down side
 				if(o.getY() + o.getHeight() < player.getY() && o.getX() < player.getX() + 15 && o.getX() + o.getWidth()> player.getX()
 						) {
 					player.U = false;
@@ -210,9 +211,11 @@ public class GUI extends JFrame {
 		for (Enemy b : birds) {
 			b.moveToPosition(player.getX()+player.rad, player.getY()+player.rad);
 		}
+		//add birds each 300 milliseconds
 		if (timerTick %300 == 0) {
 			for (int i = 0; i < timerTick/100; i++) {
-				if (birds.size() >= 100){
+				//if there are more than 30 birds don't add anything new
+				if (birds.size() >= 30){
 				} else {
 					addEnemy();
 				}	
@@ -223,7 +226,7 @@ public class GUI extends JFrame {
 	
 	BufferedImage turretImage() {
 		BufferedImage img = null;
-		
+		//return different sprite for turrent depending on if we are shooting or not
 		if (rightShoot && leftShoot) {
 			img = turretFC;
 		} else if (rightShoot) {
@@ -235,9 +238,11 @@ public class GUI extends JFrame {
 		
 	}
 
-	void gameStuff() {
+	//logic for when bullets, or players hit the birds and they die
+	void bulletsAndBirds() {
 		for(int j = 0; j < birds.size() ; j++) {
 			Enemy i = birds.get(j);
+			//distance between player and bird
 			double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 			if (positionXY <= 24 && i.birdType == i.FLAMINGO) {
 				player.hp -= i.damage;
@@ -365,7 +370,7 @@ public class GUI extends JFrame {
 			playerActions();
 			enemyActions();			
 			bulletActions();
-			gameStuff();
+			bulletsAndBirds();
 			pan.repaint();
 
 		}

@@ -448,7 +448,7 @@ public class GUI extends JFrame {
 			for(Bullet b : bullets) {
 				g.setColor(Color.RED);
 				if(player.currentWeapon == 0) {
-				g2.fillOval((int)b.x,(int) b.y, 3, 3);
+				g2.fillOval((int)b.x,(int) b.y, 30, 30);
 				}
 				if(player.currentWeapon == 1) {
 					g2.fillOval((int)b.x,(int) b.y, 3, 3);

@@ -50,6 +50,7 @@ public class GUI extends JFrame {
 	double angle;
 	int width, height;
 	Random r;
+	Timer firstTimer;
 	
 	int panSize=600; //initial value;
 	int playerAngle;
@@ -90,7 +91,7 @@ public class GUI extends JFrame {
 		pan.addKeyListener(new KL());
 		pan.addMouseListener(new ML());
 		pan.addMouseMotionListener(new ML2());
-		Timer firstTimer = new Timer(T1_SPEED,new Timer1Listener());
+		firstTimer = new Timer(T1_SPEED,new Timer1Listener());
 
 		this.setTitle("Main graphics ..."); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -243,6 +244,7 @@ public class GUI extends JFrame {
 		for(int j = 0; j < birds.size() ; j++) {
 			Enemy i = birds.get(j);
 			//distance between player and bird
+			//this part handles when birds hit player
 			double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
 			if (positionXY <= 24 && i.birdType == i.FLAMINGO) {
 				player.hp -= i.damage;
@@ -258,51 +260,51 @@ public class GUI extends JFrame {
 			}
 			if(player.hp <= 0) {
 				player.isdead = true;
-
-			}	
+			}
+			
+			//machine gun
 			for (int b = 0; b < bullets2.size(); b++) {
-				
 				Bullet c = bullets2.get(b);
 				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
 				if (BulletXY <= 23 && i.birdType == i.FLAMINGO) {
-					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					i.hp -= 10;
 					bullets2.remove(c);
 				} else if (BulletXY <= 15 && i.birdType == i.PIGEON) {
-					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					i.hp -= 10;
 					bullets2.remove(c);	
 				} else if (BulletXY <= 45 && i.birdType == i.GOOSE) {
-					i.hp -= player.weapons.get(player.currentWeapon).damage;
+					i.hp -= 10;
 					bullets2.remove(c);	
 				}
 		
 			}
+			//main bullets
 			for (int b = 0; b < bullets.size(); b++) {
 				Bullet c = bullets.get(b);
-				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
-				if (BulletXY <= 23) {
-					if(player.currentWeapon == 0) {
+				double bulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
+				
+					//this one has very high radius of damage but low damage
+					if(player.currentWeapon == 0 && bulletXY < 200) {
 					i.hp -= player.weapons.get(player.currentWeapon).damage;
-					bullets.remove(c);
 					}
-					else if(player.currentWeapon == 1) {
+					//only remove bullet if it actually touches enemy
+					if(player.currentWeapon == 0 && bulletXY < 23) {
+						bullets.remove(c);
+						}
+					//this one has very high damage but low radius, goes through enemies
+					else if(player.currentWeapon == 1 && bulletXY < 23) {
 						i.hp -= player.weapons.get(player.currentWeapon).damage;
 					}
-				}
 			}
 
-			for (int b = 0; b < bullets2.size(); b++) {
-				Bullet c = bullets2.get(b);
-				double BulletXY = Math.sqrt(Math.pow((c.getX() - i.getX()), 2)+ (Math.pow(c.getY() - i.getY(), 2)));
-				if (BulletXY <= 23) {
-					// change this to just regular damage
-					i.hp -= player.weapons.get(player.currentWeapon).damage;
-					bullets2.remove(c);	
-				}
-			}
 			if (i.hp <= 0) {
 				birds.remove(i);
 			}
-		} 
+		}
+		/*this is a timer for the main bullet
+		it goes up to 100 in bulletsActions then slowly decreases
+		we are only allowed to shoot when we hit 0, then we shoot and it 
+		goes back to 100 */
 		if (cannon > 0 ) {
 			cannon--;
 		}
@@ -340,12 +342,16 @@ public class GUI extends JFrame {
 			b.updatePosition();
 			
 		}
-		//machine gun
+		//main gun every 7 milliseconds
 		if (rightClick && timerTick %7 == 0) {
 			bullets2.add(new Bullet(player.x,player.y,50, mouseX,mouseY));
 			rightShoot = true;
 		} else rightShoot = false;
 		
+		/*machine gun
+		 we can't implement the timeout the same as the machine gun
+		because the machine gun works by holding down the mouse but the 
+		main gun works by clicking*/
 		if(leftClick && cannon == 0) {
 			player.weapons.get(player.currentWeapon).shoot(bullets, player, mouseX, mouseY);
 			leftShoot = true;
@@ -379,8 +385,7 @@ public class GUI extends JFrame {
 	class DrawPanel extends JPanel {
 
 		DrawPanel() {	
-			this.setBackground(Color.WHITE);			
-			//this.setPreferredSize(new Dimension(panSize, panSize));		
+			this.setBackground(Color.WHITE);				
 		}
 
 		boolean doInit = true;
@@ -407,11 +412,14 @@ public class GUI extends JFrame {
 
 			Graphics2D g2 = (Graphics2D) g;		
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			//background texture
 			g.drawImage(backG, 0, 0, pan.getWidth(), pan.getHeight(), null);
+			//draw the obstacles
 			for(Rectangle o : obstacles) {
 				g2.drawImage(barrier, (int)o.getX(),(int)o.getY(),(int) o.getWidth(),(int)o.getHeight(),null);
 			}
-
+			
+			//draw the birds
 			for(int j = 0; j < birds.size() ; j++) {
 				g.setColor(Color.PINK);
 				Enemy i = birds.get(j);
@@ -425,19 +433,10 @@ public class GUI extends JFrame {
 				}
 				
 				g2.rotate(0-i.accurateAngle, i.x, i.y);
-				double positionXY = Math.sqrt(Math.pow((player.getX() - i.getX()), 2)+ (Math.pow(player.getY() - i.getY(), 2)));
-				if (positionXY <= 20) {
-					player.hp -= i.damage;
-					birds.remove(i);
-				}
-				if(player.hp <= 0) {
-					player.isdead = true;
-
-				}
-
 				player.checkAngle();
 			}
-
+			
+			//draw machine gun bullets
 			for(Bullet b : bullets2) {
 				g.setColor(Color.GREEN);
 				g2.fillOval((int)b.x,(int) b.y, 3, 3);
@@ -445,6 +444,7 @@ public class GUI extends JFrame {
 				g2.drawOval((int)b.x,(int) b.y, 3, 3);
 			}
 			
+			//main bullets
 			for(Bullet b : bullets) {
 				g.setColor(Color.RED);
 				if(player.currentWeapon == 0) {
@@ -455,28 +455,18 @@ public class GUI extends JFrame {
 					}
 			}
 			
-			
+			//our current score
 			g2.drawString(String.valueOf(timerTick/10), 50, 40);
 			drawHealth(g2, player.hp);
 
-
-
-
-			
-			if(player.isdead) {
-				
-				g.setColor(Color.BLACK);
-				/*for(int i = 0; i < width; i +=10) {
-					for(int j = 0; j < height; i+=5) {
-						g.drawString("GAME OVER",i,j);
-					}
-				}*/
-				
-				timerTick = 0;
-				birds.clear();
-			}
 			player.playerDraw(g2, hull,turretImage(), angle);
 			
+			
+			if(player.isdead) {
+				timerTick = 0;
+				firstTimer.stop();
+				birds.clear();
+			}
 
 		}
 

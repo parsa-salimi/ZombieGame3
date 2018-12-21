@@ -1,7 +1,7 @@
 package me.zombies;
 
 class Darts extends Weapon{
-
+//this weapon has high speed, goes through enemies, and high damage
 	Darts() {
 		this.ammo = 5;
 		this.magazine = 5;
